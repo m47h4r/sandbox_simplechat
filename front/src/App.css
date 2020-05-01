@@ -1,0 +1,19 @@
+@import './assets/css/var.css';
+
+.page {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.page__main {
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.page__main__inner {
+	padding: 20px;
+	border: 1px solid var(--grey-medium);
+	border-radius: 100px;
+}
