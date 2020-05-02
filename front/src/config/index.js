@@ -7,4 +7,7 @@ export default {
 		passCharInclusion: /[a-z]/,
 		passNumInclusion: /[0-9]/,
   },
+	backend: {
+		url: 'http://localhost:3000',
+	},
 };

@@ -2,5 +2,7 @@
 	--grey-light: #efefef;
 	--grey-medium: #cdcdcd;
 	--black: #000000;
+	--black-transparent: rgba(0, 0, 0, 0.8);
+	--white: #ffffff;
 }
 

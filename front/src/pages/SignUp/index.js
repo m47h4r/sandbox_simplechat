@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 import config from "../../config/";
 
@@ -51,24 +52,54 @@ function formValidator(fields) {
   let result = checkFieldsForEmptiness(fields);
   if (!result.status) return result;
   result = checkFieldsAgainstRegex(fields);
-  if (!result.status) return result;
   return result;
 }
 
-function SignUp() {
+async function makeSignUpRequest(fields) {
+	try {
+		return await axios.post(config.backend.url + '/user/signup', fields);
+	} catch(error) {
+		// TODO: must show user some system problem error
+		console.log(error);
+	}
+}
+
+function showMessageToUser(type, message) {
+	// TODO: type = (false|true) 
+	// false := error
+	// true := success
+}
+
+function SignUp(props) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signUpHandler = () => {
-    let result = formValidator({
+  const signUpHandler = async () => {
+		let fields = {
       name: name,
       surname: surname,
       email: email,
       password: password,
-    });
-    console.log(result);
+    };
+    let result = formValidator(fields);
+    if (result.status) {
+			let signUpResult = await makeSignUpRequest(fields);
+			// TODO: must show user a success message
+			if (signUpResult.status === 200) {
+				props.setMessageType('success');
+				props.setMessage('Successfully signed up!');
+			} else {
+				// TODO: must identify error cases and differentiate between 'em
+				props.setMessageType('failure');
+				props.setMessage('There was some error!');
+			}
+		} else {
+			props.setMessageType('failure');
+			props.setMessage(result.errorString);
+			showMessageToUser(false, );
+		}
   };
 
   const handleChange = (e) => {

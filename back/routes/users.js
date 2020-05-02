@@ -25,7 +25,6 @@ router.post('/signup', (request, response) => {
 	let user = new User({
 		name: request.body.name,
 		surname: request.body.surname,
-		username: request.body.username,
 		email: request.body.email,
 		bio: request.body.bio,
 		pass: request.body.pass
@@ -34,6 +33,7 @@ router.post('/signup', (request, response) => {
 		if (error) debug(error);
 		response.status(200).end();
 	});
+	response.sendStatus(200);
 });
 
 module.exports = router;
