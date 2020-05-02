@@ -1,16 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import './index.css';
+import "./index.css";
 
 function Input(props) {
-	return (
-		<input
-			type={props.type}
-			placeholder={props.placeholder}
-			value={props.value}
-			onChange={props.handleChange}
-		/>
-	);
+  return (
+    <>
+      <p className="input__label">{props.name}:</p>
+      <input
+        className="input__entry"
+        name={props.name}
+        type={props.type}
+        placeholder={props.placeholder}
+        value={props.value}
+        onChange={props.handleChange}
+      />
+    </>
+  );
 }
 
 export default Input;

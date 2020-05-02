@@ -13,7 +13,7 @@
 	align-items: center;
 }
 .page__main__inner {
-	padding: 20px;
+	padding: 20px 40px;
 	border: 1px solid var(--grey-medium);
-	border-radius: 100px;
+	border-radius: 10px;
 }

@@ -1,0 +1,15 @@
+@import '../../assets/css/var.css';
+
+.input__label {
+	margin: 5px 0;
+	text-transform: capitalize;
+}
+
+.input__entry{
+	outline-width: 0;
+	color: var(--black);
+	border: 1px solid var(--grey-medium);
+	border-radius: 10px;
+	padding: 10px 15px;
+	margin-bottom: 20px;
+}

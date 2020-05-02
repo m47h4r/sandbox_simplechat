@@ -1,27 +1,20 @@
 @import '../../assets/css/var.css';
 
 .button {
-	display: inline-block;
+	display: block;
+	width: fit-content;
 	color: var(--black);
+	background-color: transparent;
 	text-decoration: none;
 	border: 1px solid var(--grey-medium);
 	border-radius: 100px;
 	padding: 10px 15px;
+	cursor: pointer; 
+	outline: none;
+	font-size: .9rem;
+	transition: all .5s ease-out;
 }
-@keyframes fill-to-gray {
-	0% { background-color: transparent; }
-	100% { background-color: var(--grey-medium); }
-}
-@keyframes unfill-from-gray {
-	0% { background-color: var(--grey-medium); }
-	100% { background-color: transparent; }
-}
+
 .button:hover {
 	background-color: var(--grey-medium);
-	animation-name: fill-to-gray;
-	animation-duration: .5s;
-}
-.button:not(hover) {
-	animation-name: unfill-from-gray;
-	animation-duration: .5s;
 }
