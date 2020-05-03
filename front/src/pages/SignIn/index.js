@@ -70,14 +70,15 @@ function SignIn(props) {
     let result = formValidator(fields);
     if (result.status) {
       let signInResult = await makeSignInRequest(fields);
+			console.log(signInResult);
       if (signInResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage(
-          "Welcome " +
+          "Welcome " /*+
             signInResult.data.user.name +
             " " +
             signInResult.data.user.surname +
-            "."
+            "."*/
         );
 				// TODO: must redirect here
       } else if (signInResult.data.status === "failure") {

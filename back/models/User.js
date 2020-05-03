@@ -30,8 +30,11 @@ UserSchema.plugin(uniqueValidator, {
 	message: 'is already taken.'
 });
 
-UserSchema.methods.verifyPassword = (password) => {
-	return this.pass === password;
-};
+UserSchema.methods.verifyPassword = function (password) {
+	console.log(password);
+	console.log(this.password);
+	console.log(password === this.password)
+	return this.password === password;
+}
 
 mongoose.model('User', UserSchema);
