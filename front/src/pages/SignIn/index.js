@@ -1,17 +1,94 @@
 import React, { useState } from "react";
+import axios from "axios";
+
+import config from "../../config/";
 
 import Input from "../../components/Input/";
 import Button from "../../components/Button";
 
 import "./index.css";
 
-function signInHandler() {
-  console.log("hi from signIn function");
+function checkFieldsAgainstRegex(fields) {
+  if (!config.regex.email.test(fields["email"])) {
+    return { status: false, errorString: "Email is not valid." };
+  }
+  if (!config.regex.passLength.test(fields["password"])) {
+    return {
+      status: false,
+      errorString: "Password length must be 8 at least.",
+    };
+  }
+  if (!config.regex.passCharInclusion.test(fields["password"])) {
+    return {
+      status: false,
+      errorString: "Password must at least include an alphabtical letter.",
+    };
+  }
+  if (!config.regex.passNumInclusion.test(fields["password"])) {
+    return {
+      status: false,
+      errorString: "Password must at least include a numerical letter.",
+    };
+  }
+  return { status: true, errorString: "" };
 }
 
-function SignIn() {
+function checkFieldsForEmptiness(fields) {
+  for (let field in fields) {
+    if (fields[field].length <= 0) {
+      return { status: false, errorString: field + " is empty." };
+    }
+  }
+  return { status: true, errorString: "" };
+}
+
+function formValidator(fields) {
+  let result = checkFieldsForEmptiness(fields);
+  if (!result.status) return result;
+  result = checkFieldsAgainstRegex(fields);
+  return result;
+}
+
+function SignIn(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  async function makeSignInRequest(fields) {
+    try {
+      return await axios.post(config.backend.url + "/user/signin", fields);
+    } catch (error) {
+      props.setMessageType("failure");
+      props.setMessage("Can not contact securechat servers :(");
+    }
+  }
+
+  const signInHandler = async () => {
+    let fields = {
+      email: email,
+      password: password,
+    };
+    let result = formValidator(fields);
+    if (result.status) {
+      let signInResult = await makeSignInRequest(fields);
+      if (signInResult.data.status === "success") {
+        props.setMessageType("success");
+        props.setMessage(
+          "Welcome " +
+            signInResult.data.user.name +
+            " " +
+            signInResult.data.user.surname +
+            "."
+        );
+				// TODO: must redirect here
+      } else if (signInResult.data.status === "failure") {
+        props.setMessageType("failure");
+        props.setMessage(signInResult.data.error);
+      }
+    } else {
+      props.setMessageType("failure");
+      props.setMessage(result.errorString);
+    }
+  };
 
   const handleChange = (e) => {
     switch (e.target.name) {

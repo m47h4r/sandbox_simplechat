@@ -36,7 +36,10 @@ function App() {
                   <Home />
                 </Route>
                 <Route path="/signin">
-                  <SignIn />
+                  <SignIn
+                    setMessage={setMessage}
+                    setMessageType={setMessageType}
+                  />
                 </Route>
                 <Route path="/signup">
                   <SignUp

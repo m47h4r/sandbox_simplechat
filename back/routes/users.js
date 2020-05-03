@@ -15,7 +15,7 @@ router.post("/signup", (request, response) => {
     surname: request.body.surname,
     email: request.body.email,
     bio: request.body.bio,
-    pass: request.body.pass,
+    password: request.body.password,
   });
   user.save((error) => {
     if (error) {
@@ -26,6 +26,27 @@ router.post("/signup", (request, response) => {
       response.json({ status: "success", error: "" });
     }
   });
+});
+
+router.post("/signin", (request, response) => {
+  User.findOne(
+    { email: request.body.email, password: request.body.password },
+    "name surname",
+    (error, user) => {
+			if (error) {
+				debug(error);
+				response.json({status: 'failure', error: 'Database error.'});
+			} else {
+				console.log(user);
+				if (user) {
+					response.json({status: 'success', user: user})
+					// TODO: must sign user in using passport right here
+				} else {
+					response.json({status: 'failure', error: 'Wrong credentials.'});
+				}
+			}
+		}
+  );
 });
 
 module.exports = router;

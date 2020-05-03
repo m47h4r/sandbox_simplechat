@@ -23,7 +23,7 @@ let UserSchema = new mongoose.Schema({
 		index: true
 	},
 	bio: String,
-	pass: String,
+	password: String,
 }, {timestamps: true});
 
 UserSchema.plugin(uniqueValidator, {
