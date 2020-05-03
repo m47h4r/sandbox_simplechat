@@ -30,7 +30,7 @@ function Message(props) {
 			onClick={handleClick}
 		>
       <div className="message-inner" style={setMessageType()}>
-        <p>{props.message}</p>
+        <p className="message-text">{props.message}</p>
       </div>
 		</div>
   );

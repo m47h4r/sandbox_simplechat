@@ -69,6 +69,7 @@ function SignUp(props) {
       props.setMessage("Can not contact securechat servers :(");
     }
   }
+
   const signUpHandler = async () => {
     let fields = {
       name: name,
@@ -79,8 +80,6 @@ function SignUp(props) {
     let result = formValidator(fields);
     if (result.status) {
       let signUpResult = await makeSignUpRequest(fields);
-      // TODO: must show user a success message
-      console.log(signUpResult);
       if (signUpResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage("Successfully signed up!");
