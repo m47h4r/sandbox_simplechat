@@ -8,11 +8,11 @@ function Message(props) {
     props.setMessageType("");
   }
 
-  function setVisibility() {
+  function setClassName() {
     if (props.message.length > 0) {
-      return { visibility: "visible" };
+      return "message-outer";
     } else {
-      return { visibility: "hidden" };
+      return "message-outer message-outer__disabled";
     }
   }
 
@@ -25,15 +25,14 @@ function Message(props) {
   }
 
   return (
-    <div
-      className="message-outer"
-      style={setVisibility()}
-      onClick={handleClick}
-    >
+		<div
+			className={setClassName()}
+			onClick={handleClick}
+		>
       <div className="message-inner" style={setMessageType()}>
         <p>{props.message}</p>
       </div>
-    </div>
+		</div>
   );
 }
 
