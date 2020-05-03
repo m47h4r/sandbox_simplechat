@@ -87,13 +87,14 @@ function SignUp(props) {
     if (result.status) {
 			let signUpResult = await makeSignUpRequest(fields);
 			// TODO: must show user a success message
-			if (signUpResult.status === 200) {
+			console.log(signUpResult);
+			if (signUpResult.data.status === 'success') {
 				props.setMessageType('success');
 				props.setMessage('Successfully signed up!');
-			} else {
+			} else if (signUpResult.data.status === 'failure') {
 				// TODO: must identify error cases and differentiate between 'em
 				props.setMessageType('failure');
-				props.setMessage('There was some error!');
+				props.setMessage(signUpResult.data.error);
 			}
 		} else {
 			props.setMessageType('failure');

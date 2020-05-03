@@ -17,7 +17,12 @@ function App() {
 
   return (
     <div className="app-container">
-      <Message messageType={messageType} message={message} />
+      <Message
+        messageType={messageType}
+        message={message}
+        setMessage={setMessage}
+        setMessageType={setMessageType}
+      />
       <Router>
         <div className="page">
           <div className="page__header">
