@@ -4,8 +4,7 @@ const debug = require("debug")("back:server");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	debug(req.session);
-  res.send(200);
+  res.json('some');
 });
 
 module.exports = router;

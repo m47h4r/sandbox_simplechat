@@ -24,6 +24,11 @@ let UserSchema = new mongoose.Schema({
 	},
 	bio: String,
 	password: String,
+	sessionSecret: {
+		type: String,
+		require: [true, "can't be blank"]
+	},
+	lastAccessed: Date
 }, {timestamps: true});
 
 UserSchema.plugin(uniqueValidator, {
@@ -31,10 +36,11 @@ UserSchema.plugin(uniqueValidator, {
 });
 
 UserSchema.methods.verifyPassword = function (password) {
-	console.log(password);
-	console.log(this.password);
-	console.log(password === this.password)
 	return this.password === password;
+}
+
+UserSchema.methods.isSessionValid = (claimedSessionSecret) => {
+	return this.sessionSecret === claimedSessionSecret;
 }
 
 mongoose.model('User', UserSchema);
