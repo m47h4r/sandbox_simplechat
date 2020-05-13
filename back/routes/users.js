@@ -6,11 +6,6 @@ const debug = require("debug")("back:server");
 const config = require('../config/');
 const generateStringID = require('../utils/stringIDGenerator');
 
-/* GET users listing. */
-//router.get("/", (request, res, next) => {
-//  res.send("respond with a resource");
-//});
-
 router.post("/signup", (request, response) => {
   let user = new User({
     name: request.body.name,
@@ -45,27 +40,6 @@ router.post("/signin", (request, response) => {
       //}
     }
   });
-  //User.findOne(
-  //  { email: request.body.email, password: request.body.password },
-  //  "name surname",
-  //  (error, user) => {
-  //    if (error) {
-  //      debug(error);
-  //      response.json({ status: "failure", error: "Database error." });
-  //    } else {
-  //      console.log(user);
-  //      if (user) {
-  //        response.json({ status: "success", user: user });
-  //				passport.authenticate('local', (request, response) => {
-  //					response
-  //				})
-  //        // TODO: must sign user in using passport right here
-  //      } else {
-  //        response.json({ status: "failure", error: "Wrong credentials." });
-  //      }
-  //    }
-  //  }
-  //);
 });
 
 module.exports = router;

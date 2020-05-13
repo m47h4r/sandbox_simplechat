@@ -39,6 +39,7 @@ UserSchema.methods.verifyPassword = function (password) {
 	return this.password === password;
 }
 
+// not used even once, must validate when checking session for different tasks
 UserSchema.methods.isSessionValid = (claimedSessionSecret) => {
 	return this.sessionSecret === claimedSessionSecret;
 }
