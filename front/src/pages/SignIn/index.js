@@ -81,6 +81,8 @@ function SignIn(props) {
             "."*/
         );
 				// TODO: must redirect here
+				// TODO: must handle empty fields from backend and default to
+				// a predefined error
       } else if (signInResult.data.status === "failure") {
         props.setMessageType("failure");
         props.setMessage(signInResult.data.error);

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const passport = require('passport');
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const debug = require("debug")("back:server");
@@ -29,9 +28,17 @@ router.post("/signup", (request, response) => {
   });
 });
 
-router.post("/signin",
-	passport.authenticate('local'), (request, response) => {
-		response.json({status: 'success'});
+router.post("/signin", (request, response) => {
+	User.findOne({ email: request.body.email }, (error, user) => {
+		if (error || !user || !user.verifyPassword(request.body.password)) {
+			response.json({status: 'failure', error: "An error occured"});
+		} else {
+			if (!request.session) {
+				request.session.user = user;
+				response.json({status: 'success', user: user});
+			}
+		}
+	});
   //User.findOne(
   //  { email: request.body.email, password: request.body.password },
   //  "name surname",
