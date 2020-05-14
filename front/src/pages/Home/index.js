@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import Button from "../../components/Button";
+import { useCookies } from 'react-cookie';
 
 import './index.css';
-import config from "../../config/";
 
 function Home() {
-	const [user, setUser] = useState("");
-
-	const buttonHandler = async () => {
-		let result = await axios.get(config.backend.url);
-		console.log(result);
-		console.log(result.data);
-	}
+	const [cookies, setCookie] = useCookies(['session-cookie']);
 
 	return (
 		<>
-			<Button type="button" onClick={buttonHandler} text="Sign In" />
-			<p>{user}</p>
+      <p>{cookies['session-cookie']}</p>
 		</>
 	);
 }
