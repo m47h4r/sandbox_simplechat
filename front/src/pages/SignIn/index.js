@@ -70,7 +70,7 @@ function SignIn(props) {
     let result = formValidator(fields);
     if (result.status) {
       let signInResult = await makeSignInRequest(fields);
-			console.log(signInResult);
+      console.log(signInResult);
       if (signInResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage(

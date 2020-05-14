@@ -3,8 +3,8 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const debug = require("debug")("back:server");
-const config = require('../config/');
-const generateStringID = require('../utils/stringIDGenerator');
+const config = require("../config/");
+const generateStringID = require("../utils/stringIDGenerator");
 
 router.post("/signup", (request, response) => {
   let user = new User({
@@ -13,8 +13,8 @@ router.post("/signup", (request, response) => {
     email: request.body.email,
     bio: request.body.bio,
     password: request.body.password,
-		sessionSecret: generateStringID(config.general.stringIDLength),
-		lastAccessed: new Date
+    sessionSecret: generateStringID(config.general.stringIDLength),
+    lastAccessed: new Date(),
   });
   user.save((error) => {
     if (error) {
