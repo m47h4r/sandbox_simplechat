@@ -57,4 +57,20 @@ router.post("/signin", (request, response) => {
   });
 });
 
+router.post("/checkSession", (request, response) => {
+  User.findOne(
+    {
+      sessionSecret: request.body.claimedSessionSecret,
+    },
+    async (error, user) => {
+			const expirationDate = new Date(
+				user.lastAccessed.getTime() + (7 * 24 * 60 * 60 * 1000)
+			);
+			response.json({
+				result: (new Date().getTime() <= expirationDate.getTime())
+			});
+		}
+  );
+});
+
 module.exports = router;
