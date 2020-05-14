@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import config from "../../config/";
 
@@ -52,6 +53,7 @@ function formValidator(fields) {
 function SignIn(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cookies, setCookie] = useCookies(["session-cookie"]);
 
   async function makeSignInRequest(fields) {
     try {
@@ -74,15 +76,20 @@ function SignIn(props) {
       if (signInResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage(
-          "Welcome " /*+
+          "Welcome " +
             signInResult.data.user.name +
             " " +
             signInResult.data.user.surname +
-            "."*/
+            "."
         );
-				// TODO: must redirect here
-				// TODO: must handle empty fields from backend and default to
-				// a predefined error
+        setCookie("session-cookie", signInResult.data.user.sessionSecret, {
+          path: "/",
+        });
+				// TODO: redirect user to home here
+        console.log(signInResult.data);
+        // TODO: must redirect here
+        // TODO: must handle empty fields from backend and default to
+        // a predefined error
       } else if (signInResult.data.status === "failure") {
         props.setMessageType("failure");
         props.setMessage(signInResult.data.error);
