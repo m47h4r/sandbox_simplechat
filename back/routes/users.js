@@ -22,7 +22,14 @@ router.post("/signup", (request, response) => {
       // TODO: must differentiate between errors, like email taken
       response.json({ status: "failure", error: "Database error." });
     } else {
-      response.json({ status: "success", error: "" });
+      response.json({
+				status: "success",
+				user: {
+          name: user.name,
+          surname: user.surname,
+          sessionSecret: user.sessionSecret,
+        }
+			});
     }
   });
 });
@@ -33,10 +40,18 @@ router.post("/signin", (request, response) => {
       response.json({ status: "failure", error: "An error occured" });
     } else {
       //if (!user.isSessionValid(request.body.sessionID)) {
-				user.sessionSecret = generateStringID(config.general.stringIDLength);
-				user.lastAccessed = new Date();
-				await user.save();
-        response.json({ status: "success", user: user });
+      const sessionSecret = generateStringID(config.general.stringIDLength);
+      user.sessionSecret = sessionSecret;
+      user.lastAccessed = new Date();
+      await user.save();
+      response.json({
+        status: "success",
+        user: {
+          name: user.name,
+          surname: user.surname,
+          sessionSecret: sessionSecret,
+        },
+      });
       //}
     }
   });
