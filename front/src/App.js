@@ -26,7 +26,7 @@ function App() {
       <Router>
         <div className="page">
           <div className="page__header">
-            <Header />
+            <Header setMessage={setMessage} setMessageType={setMessageType} />
           </div>
 
           <div className="page__main">

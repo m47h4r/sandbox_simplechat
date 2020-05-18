@@ -57,6 +57,20 @@ router.post("/signin", (request, response) => {
   });
 });
 
+router.post("/signout", (request, response) => {
+	User.findOne(
+		{ sessionSecret: request.body.sessionSecret},
+		async (error, user) => {
+			if (!user) {
+				return response.json({result: false, error: "No such session found!"});
+			}
+			user.sessionSecret = null;
+			user.lastAccessed = new Date();
+			await user.save();
+			return response.json({ status: "success" });
+		});
+});
+
 router.post("/checkSession", (request, response) => {
   User.findOne(
     {
