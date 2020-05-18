@@ -63,10 +63,13 @@ router.post("/checkSession", (request, response) => {
       sessionSecret: request.body.claimedSessionSecret,
     },
     async (error, user) => {
+			if (!user) {
+				return response.json({ result: false });
+			}
 			const expirationDate = new Date(
 				user.lastAccessed.getTime() + (7 * 24 * 60 * 60 * 1000)
 			);
-			response.json({
+			return response.json({
 				result: (new Date().getTime() <= expirationDate.getTime())
 			});
 		}
