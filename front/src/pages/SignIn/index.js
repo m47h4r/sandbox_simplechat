@@ -72,7 +72,6 @@ function SignIn(props) {
     let result = formValidator(fields);
     if (result.status) {
       let signInResult = await makeSignInRequest(fields);
-      console.log(signInResult);
       if (signInResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage(
@@ -86,7 +85,6 @@ function SignIn(props) {
           path: "/",
         });
 				// TODO: redirect user to home here
-        console.log(signInResult.data);
         // TODO: must redirect here
         // TODO: must handle empty fields from backend and default to
         // a predefined error
