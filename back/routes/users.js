@@ -67,7 +67,7 @@ router.post("/checkSession", (request, response) => {
 				return response.json({ result: false });
 			}
 			const expirationDate = new Date(
-				user.lastAccessed.getTime() + (7 * 24 * 60 * 60 * 1000)
+				user.lastAccessed.getTime() + config.general.validSessionTime
 			);
 			return response.json({
 				result: (new Date().getTime() <= expirationDate.getTime())
