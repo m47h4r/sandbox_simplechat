@@ -25,11 +25,10 @@ function App() {
 	const [cookies, setCookie] = useCookies(["session-cookie"]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	const checkSession = async () => {
-		setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
-	};
-
 	useEffect(() => {
+		const checkSession = async () => {
+			setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
+		};
 		checkSession();
 	}, [cookies["session-cookie"]]);
 
