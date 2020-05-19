@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import { Redirect } from 'react-router-dom';
 import config from "../../config/";
 
 import Button from "../Button";
@@ -37,7 +38,6 @@ function Header(props) {
     if (signOutResult.data.status === "success") {
       props.setMessageType("success");
       props.setMessage("Successfully signed out!");
-			// TODO: redirect to signin here
     } else {
 			props.setMessageType("failure");
 			props.setMessage(signOutResult.data.error);
@@ -72,6 +72,7 @@ function Header(props) {
         <Button type="routerLink" destination="/" text="Home" />
       </li>
       {isLoggedIn ? renderSignOutButton() : renderSignUpSignInButtons()}
+			{!isLoggedIn ? <Redirect to="/signin" /> : null}
     </ul>
   );
 }
