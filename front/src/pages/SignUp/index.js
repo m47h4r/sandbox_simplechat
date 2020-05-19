@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import { Redirect } from 'react-router-dom';
 
 import config from "../../config/";
+import { checkUserSession } from '../../utils/session';
 
 import Input from "../../components/Input/";
 import Button from "../../components/Button";
@@ -65,15 +66,12 @@ function SignUp(props) {
   const [cookies, setCookie] = useCookies(["session-cookie"]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const checkUserSession = async () => {
-    let result = await axios.post(config.backend.url + "/user/checkSession", {
-      claimedSessionSecret: cookies["session-cookie"],
-    });
-    setIsLoggedIn(result.data.result);
-  };
+	const checkSession = async () => {
+		setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
+	};
 
   useEffect(() => {
-    checkUserSession();
+    checkSession();
   }, [cookies["session-cookie"]]);
 
   async function makeSignUpRequest(fields) {
@@ -106,10 +104,12 @@ function SignUp(props) {
         // TODO: must identify error cases and differentiate between 'em
         props.setMessageType("failure");
         props.setMessage(signUpResult.data.error);
+				setIsLoggedIn(false);
       }
     } else {
       props.setMessageType("failure");
       props.setMessage(result.errorString);
+			setIsLoggedIn(false);
     }
   };
 
