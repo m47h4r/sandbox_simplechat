@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./index.css";
+import "./Input.css";
 
 function Input(props) {
 	return (

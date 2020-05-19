@@ -1,11 +1,11 @@
 import React from "react";
 import axios from "axios";
 
-import config from "../../config/";
+import config from "../config/";
 
-import Button from "../Button";
+import Button from "./Button";
 
-import "./index.css";
+import "./Header.css";
 
 function Header(props) {
 	async function makeSignOutRequest(fields) {

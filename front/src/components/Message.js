@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./index.css";
+import "./Message.css";
 
 function Message(props) {
 	function handleClick() {

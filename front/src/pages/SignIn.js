@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import config from "../../config/";
+import config from "../config/";
 
-import Input from "../../components/Input/";
-import Button from "../../components/Button";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
-import "./index.css";
+import "./SignIn.css";
 
 function checkFieldsAgainstRegex(fields) {
 	if (!config.regex.email.test(fields["email"])) {

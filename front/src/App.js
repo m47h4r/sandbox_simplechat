@@ -9,11 +9,11 @@ import { useCookies } from "react-cookie";
 
 import "./assets/css/global.css";
 
-import Home from "./pages/Home/";
-import SignIn from "./pages/SignIn/";
-import SignUp from "./pages/SignUp/";
-import Header from "./components/Header/";
-import Message from "./components/Message/";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Header from "./components/Header";
+import Message from "./components/Message";
 
 import { checkUserSession, updateSessionTime } from "./utils/session";
 
