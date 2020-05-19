@@ -81,7 +81,7 @@ router.post("/checkSession", (request, response) => {
 			sessionSecret: request.body.claimedSessionSecret,
 		},
 		async (error, user) => {
-			if (!user) {
+			if (!user || error) {
 				return response.json({ result: false });
 			}
 			const expirationDate = new Date(
@@ -90,6 +90,23 @@ router.post("/checkSession", (request, response) => {
 			return response.json({
 				result: new Date().getTime() <= expirationDate.getTime(),
 			});
+		}
+	);
+});
+
+router.post("/updateSessionTime", (request, response) => {
+	User.findOne(
+		{
+			sessionSecret: request.body.claimedSessionSecret,
+		},
+		async (error, user) => {
+			if (!user || error) {
+				return response.json({ result: false });
+			}
+			const currentDate = new Date();
+			user.lastAccessed = currentDate;
+			await user.save();
+			return response.json({ result: true });
 		}
 	);
 });

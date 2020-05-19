@@ -15,7 +15,7 @@ import SignUp from "./pages/SignUp/";
 import Header from "./components/Header/";
 import Message from "./components/Message/";
 
-import { checkUserSession } from "./utils/session";
+import { checkUserSession, updateSessionTime } from "./utils/session";
 
 import "./App.css";
 
@@ -31,6 +31,15 @@ function App() {
 		};
 		checkSession();
 	}, [cookies["session-cookie"]]);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			const updateSession = async () => {
+				updateSessionTime(cookies["session-cookie"]);
+			};
+			updateSession();
+		}
+	}, [isLoggedIn]);
 
 	return (
 		<div className="app-container">

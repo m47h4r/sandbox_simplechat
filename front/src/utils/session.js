@@ -10,4 +10,13 @@ const checkUserSession = async (claimedSessionSecret) => {
 	return result.data.result;
 };
 
-export { checkUserSession };
+const updateSessionTime = async (claimedSessionSecret) => {
+	// result := true | false
+	let result = await axios.post(
+		config.backend.url + "/user/updateSessionTime",
+		{ claimedSessionSecret: claimedSessionSecret }
+	);
+	return result.data.result;
+};
+
+export { checkUserSession, updateSessionTime };
