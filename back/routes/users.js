@@ -7,76 +7,80 @@ const config = require("../config/");
 const generateStringID = require("../utils/stringIDGenerator");
 
 router.post("/signup", (request, response) => {
-  let user = new User({
-    name: request.body.name,
-    surname: request.body.surname,
-    email: request.body.email,
-    bio: request.body.bio,
-    password: request.body.password,
-    sessionSecret: generateStringID(config.general.stringIDLength),
-    lastAccessed: new Date(),
-  });
-  user.save((error) => {
-    if (error) {
-      debug(error);
-      // TODO: must differentiate between errors, like email taken
-      response.json({ status: "failure", error: "Database error." });
-    } else {
-      response.json({
+	let user = new User({
+		name: request.body.name,
+		surname: request.body.surname,
+		email: request.body.email,
+		bio: request.body.bio,
+		password: request.body.password,
+		sessionSecret: generateStringID(config.general.stringIDLength),
+		lastAccessed: new Date(),
+	});
+	user.save((error) => {
+		if (error) {
+			debug(error);
+			// TODO: must differentiate between errors, like email taken
+			response.json({ status: "failure", error: "Database error." });
+		} else {
+			response.json({
 				status: "success",
 				user: {
-          name: user.name,
-          surname: user.surname,
-          sessionSecret: user.sessionSecret,
-        }
+					name: user.name,
+					surname: user.surname,
+					sessionSecret: user.sessionSecret,
+				},
 			});
-    }
-  });
+		}
+	});
 });
 
 router.post("/signin", (request, response) => {
-  User.findOne({ email: request.body.email }, async (error, user) => {
-    if (error || !user || !user.verifyPassword(request.body.password)) {
-      response.json({ status: "failure", error: "An error occured" });
-    } else {
-      //if (!user.isSessionValid(request.body.sessionID)) {
-      const sessionSecret = generateStringID(config.general.stringIDLength);
-      user.sessionSecret = sessionSecret;
-      user.lastAccessed = new Date();
-      await user.save();
-      response.json({
-        status: "success",
-        user: {
-          name: user.name,
-          surname: user.surname,
-          sessionSecret: sessionSecret,
-        },
-      });
-      //}
-    }
-  });
+	User.findOne({ email: request.body.email }, async (error, user) => {
+		if (error || !user || !user.verifyPassword(request.body.password)) {
+			response.json({ status: "failure", error: "An error occured" });
+		} else {
+			//if (!user.isSessionValid(request.body.sessionID)) {
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			user.sessionSecret = sessionSecret;
+			user.lastAccessed = new Date();
+			await user.save();
+			response.json({
+				status: "success",
+				user: {
+					name: user.name,
+					surname: user.surname,
+					sessionSecret: sessionSecret,
+				},
+			});
+			//}
+		}
+	});
 });
 
 router.post("/signout", (request, response) => {
 	User.findOne(
-		{ sessionSecret: request.body.sessionSecret},
+		{ sessionSecret: request.body.sessionSecret },
 		async (error, user) => {
 			if (!user) {
-				return response.json({result: false, error: "No such session found!"});
+				return response.json({
+					result: false,
+					error: "No such session found!",
+				});
 			}
 			user.sessionSecret = null;
 			user.lastAccessed = new Date();
 			await user.save();
 			return response.json({ status: "success" });
-		});
+		}
+	);
 });
 
 router.post("/checkSession", (request, response) => {
-  User.findOne(
-    {
-      sessionSecret: request.body.claimedSessionSecret,
-    },
-    async (error, user) => {
+	User.findOne(
+		{
+			sessionSecret: request.body.claimedSessionSecret,
+		},
+		async (error, user) => {
 			if (!user) {
 				return response.json({ result: false });
 			}
@@ -84,10 +88,10 @@ router.post("/checkSession", (request, response) => {
 				user.lastAccessed.getTime() + config.general.validSessionTime
 			);
 			return response.json({
-				result: (new Date().getTime() <= expirationDate.getTime())
+				result: new Date().getTime() <= expirationDate.getTime(),
 			});
 		}
-  );
+	);
 });
 
 module.exports = router;

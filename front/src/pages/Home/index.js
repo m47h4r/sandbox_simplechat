@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import './index.css';
+import "./index.css";
 
 function Home(props) {
-
 	return (
 		<>
-      <p>{JSON.stringify(props.isLoggedIn)}</p>
+			<p>{JSON.stringify(props.isLoggedIn)}</p>
 		</>
 	);
 }

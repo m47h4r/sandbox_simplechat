@@ -1,4 +1,4 @@
-@import './assets/css/var.css';
+@import "./assets/css/var.css";
 
 .app-container {
 	position: relative;
@@ -18,7 +18,7 @@
 	justify-content: center;
 	align-items: center;
 	background-image: linear-gradient(to bottom, var(--grey-light), transparent),
-		url('./assets/images/dotted_bg.png') ;
+		url("./assets/images/dotted_bg.png");
 	background-repeat: repeat;
 }
 .page__main__inner {

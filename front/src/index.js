@@ -5,12 +5,12 @@ import * as serviceWorker from "./serviceWorker";
 import { CookiesProvider } from "react-cookie";
 
 ReactDOM.render(
-  <CookiesProvider>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </CookiesProvider>,
-  document.getElementById("root")
+	<CookiesProvider>
+		<React.StrictMode>
+			<App />
+		</React.StrictMode>
+	</CookiesProvider>,
+	document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -3,7 +3,7 @@ import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	Redirect
+	Redirect,
 } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -57,7 +57,7 @@ function App() {
 						<div className="page__main__inner">
 							<Switch>
 								<Route exact path="/">
-									<Home 
+									<Home
 										sessionCookie={cookies["session-cookie"]}
 										setSessionCookie={setCookie}
 										isLoggedIn={isLoggedIn}
