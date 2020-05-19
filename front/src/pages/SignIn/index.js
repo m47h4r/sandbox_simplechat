@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { Redirect } from 'react-router-dom';
@@ -56,6 +56,17 @@ function SignIn(props) {
   const [password, setPassword] = useState("");
   const [cookies, setCookie] = useCookies(["session-cookie"]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkUserSession = async () => {
+    let result = await axios.post(config.backend.url + "/user/checkSession", {
+      claimedSessionSecret: cookies["session-cookie"],
+    });
+    setIsLoggedIn(result.data.result);
+  };
+
+  useEffect(() => {
+    checkUserSession();
+  }, [cookies["session-cookie"]]);
 
   async function makeSignInRequest(fields) {
     try {

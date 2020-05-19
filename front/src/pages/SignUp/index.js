@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { Redirect } from 'react-router-dom';
 
 import config from "../../config/";
 
@@ -62,6 +63,18 @@ function SignUp(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookies, setCookie] = useCookies(["session-cookie"]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkUserSession = async () => {
+    let result = await axios.post(config.backend.url + "/user/checkSession", {
+      claimedSessionSecret: cookies["session-cookie"],
+    });
+    setIsLoggedIn(result.data.result);
+  };
+
+  useEffect(() => {
+    checkUserSession();
+  }, [cookies["session-cookie"]]);
 
   async function makeSignUpRequest(fields) {
     try {
@@ -82,14 +95,13 @@ function SignUp(props) {
     let result = formValidator(fields);
     if (result.status) {
       let signUpResult = await makeSignUpRequest(fields);
-				console.log(signUpResult)
       if (signUpResult.data.status === "success") {
         props.setMessageType("success");
         props.setMessage("Successfully signed up!");
         setCookie("session-cookie", signUpResult.data.user.sessionSecret, {
           path: "/",
         });
-				// TODO: redirect user to home here
+				setIsLoggedIn(true);
       } else if (signUpResult.data.status === "failure") {
         // TODO: must identify error cases and differentiate between 'em
         props.setMessageType("failure");
@@ -152,6 +164,7 @@ function SignUp(props) {
       <div className="signup-button-container">
         <Button type="button" onClick={signUpHandler} text="Sign Up" />
       </div>
+			{isLoggedIn ? <Redirect to="/" /> : null}
     </>
   );
 }
