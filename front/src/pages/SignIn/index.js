@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useCookies } from "react-cookie";
-import { Redirect } from 'react-router-dom';
 
 import config from "../../config/";
-import { checkUserSession } from '../../utils/session';
 
 import Input from "../../components/Input/";
 import Button from "../../components/Button";
@@ -55,16 +52,6 @@ function formValidator(fields) {
 function SignIn(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cookies, setCookie] = useCookies(["session-cookie"]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	const checkSession = async () => {
-		setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
-	};
-
-  useEffect(() => {
-    checkSession();
-  }, [cookies["session-cookie"]]);
 
   async function makeSignInRequest(fields) {
     try {
@@ -92,21 +79,21 @@ function SignIn(props) {
             signInResult.data.user.surname +
             "."
         );
-        setCookie("session-cookie", signInResult.data.user.sessionSecret, {
+        props.setSessionCookie("session-cookie", signInResult.data.user.sessionSecret, {
           path: "/",
         });
-				setIsLoggedIn(true);
+				props.setIsLoggedIn(true);
         // TODO: must handle empty fields from backend and default to
         // a predefined error
       } else if (signInResult.data.status === "failure") {
         props.setMessageType("failure");
         props.setMessage(signInResult.data.error);
-				setIsLoggedIn(false);
+				props.setIsLoggedIn(false);
       }
     } else {
       props.setMessageType("failure");
       props.setMessage(result.errorString);
-			setIsLoggedIn(false);
+			props.setIsLoggedIn(false);
     }
   };
 
@@ -141,7 +128,6 @@ function SignIn(props) {
       <div className="signin-button-container">
         <Button type="button" onClick={signInHandler} text="Sign In" />
       </div>
-			{isLoggedIn ? <Redirect to="/" /> : null}
     </>
   );
 }

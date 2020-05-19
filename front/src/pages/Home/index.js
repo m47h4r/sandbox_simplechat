@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
+import React, { useEffect, useState } from 'react';
 
 import './index.css';
 
-function Home() {
-	const [cookies, setCookie] = useCookies(['session-cookie']);
+function Home(props) {
 
 	return (
 		<>
-      <p>{cookies['session-cookie']}</p>
+      <p>{JSON.stringify(props.isLoggedIn)}</p>
 		</>
 	);
 }

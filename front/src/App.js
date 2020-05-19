@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect
+} from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 import "./assets/css/global.css";
 
@@ -9,51 +15,82 @@ import SignUp from "./pages/SignUp/";
 import Header from "./components/Header/";
 import Message from "./components/Message/";
 
+import { checkUserSession } from "./utils/session";
+
 import "./App.css";
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
+	const [message, setMessage] = useState("");
+	const [messageType, setMessageType] = useState("");
+	const [cookies, setCookie] = useCookies(["session-cookie"]);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  return (
-    <div className="app-container">
-      <Message
-        messageType={messageType}
-        message={message}
-        setMessage={setMessage}
-        setMessageType={setMessageType}
-      />
-      <Router>
-        <div className="page">
-          <div className="page__header">
-            <Header setMessage={setMessage} setMessageType={setMessageType} />
-          </div>
+	const checkSession = async () => {
+		setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
+	};
 
-          <div className="page__main">
-            <div className="page__main__inner">
-              <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route path="/signin">
-                  <SignIn
-                    setMessage={setMessage}
-                    setMessageType={setMessageType}
-                  />
-                </Route>
-                <Route path="/signup">
-                  <SignUp
-                    setMessage={setMessage}
-                    setMessageType={setMessageType}
-                  />
-                </Route>
-              </Switch>
-            </div>
-          </div>
-        </div>
-      </Router>
-    </div>
-  );
+	useEffect(() => {
+		checkSession();
+	}, [cookies["session-cookie"]]);
+
+	return (
+		<div className="app-container">
+			<Message
+				messageType={messageType}
+				message={message}
+				setMessage={setMessage}
+				setMessageType={setMessageType}
+			/>
+			<Router>
+				<div className="page">
+					<div className="page__header">
+						<Header
+							setMessage={setMessage}
+							setMessageType={setMessageType}
+							sessionCookie={cookies["session-cookie"]}
+							setSessionCookie={setCookie}
+							isLoggedIn={isLoggedIn}
+						/>
+					</div>
+
+					<div className="page__main">
+						<div className="page__main__inner">
+							<Switch>
+								<Route exact path="/">
+									<Home 
+										sessionCookie={cookies["session-cookie"]}
+										setSessionCookie={setCookie}
+										isLoggedIn={isLoggedIn}
+									/>
+								</Route>
+								<Route path="/signin">
+									<SignIn
+										setMessage={setMessage}
+										setMessageType={setMessageType}
+										sessionCookie={cookies["session-cookie"]}
+										setSessionCookie={setCookie}
+										isLoggedIn={isLoggedIn}
+										setIsLoggedIn={setIsLoggedIn}
+									/>
+								</Route>
+								<Route path="/signup">
+									<SignUp
+										setMessage={setMessage}
+										setMessageType={setMessageType}
+										sessionCookie={cookies["session-cookie"]}
+										setSessionCookie={setCookie}
+										isLoggedIn={isLoggedIn}
+										setIsLoggedIn={setIsLoggedIn}
+									/>
+								</Route>
+							</Switch>
+						</div>
+					</div>
+				</div>
+				{isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+			</Router>
+		</div>
+	);
 }
 
 export default App;
