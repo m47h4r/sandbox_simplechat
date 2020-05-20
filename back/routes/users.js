@@ -77,9 +77,7 @@ router.post("/signout", (request, response) => {
 
 router.post("/checkSession", (request, response) => {
 	User.findOne(
-		{
-			sessionSecret: request.body.claimedSessionSecret,
-		},
+		{ sessionSecret: request.body.claimedSessionSecret },
 		async (error, user) => {
 			if (!user || error) {
 				return response.json({ result: false });
@@ -96,9 +94,7 @@ router.post("/checkSession", (request, response) => {
 
 router.post("/updateSessionTime", (request, response) => {
 	User.findOne(
-		{
-			sessionSecret: request.body.claimedSessionSecret,
-		},
+		{ sessionSecret: request.body.claimedSessionSecret },
 		async (error, user) => {
 			if (!user || error) {
 				return response.json({ result: false });
@@ -107,6 +103,28 @@ router.post("/updateSessionTime", (request, response) => {
 			user.lastAccessed = currentDate;
 			await user.save();
 			return response.json({ result: true });
+		}
+	);
+});
+
+router.post("/addContact", (request, response) => {
+	User.findOne(
+		{ sessionSecret: request.body.claimedSessionSecret },
+		async (errorSession, user) => {
+			if (!user || errorSession) {
+				return response.json({ result: false, error: "An error occured." });
+			}
+			User.findOne(
+				{ email: request.body.email },
+				async (errorContact, contact) => {
+					if (!contact || errorContact) {
+						return response.json({ result: false, error: "User not found." });
+					}
+					user.contacts.push(contact._id);
+					await user.save();
+					return response.json({ result: true });
+				}
+			);
 		}
 	);
 });
