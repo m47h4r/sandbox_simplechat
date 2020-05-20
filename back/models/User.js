@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const uniqueValidator = require("mongoose-unique-validator");
-const crypto = require("crypto");
+// const crypto = require("crypto");
 
 let UserSchema = new mongoose.Schema(
 	{
@@ -30,6 +31,7 @@ let UserSchema = new mongoose.Schema(
 			require: [true, "can't be blank"],
 		},
 		lastAccessed: Date,
+		contacts: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 	},
 	{ timestamps: true }
 );
