@@ -7,7 +7,11 @@ function Input(props) {
 		<>
 			<p className="input__label">{props.name}:</p>
 			<input
-				className="input__entry"
+				className={
+					props.noMargin
+						? "input__entry input__entry--no-margin"
+						: "input__entry"
+				}
 				name={props.name}
 				type={props.type}
 				placeholder={props.placeholder}

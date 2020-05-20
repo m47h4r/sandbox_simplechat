@@ -5,11 +5,14 @@
 	text-transform: capitalize;
 }
 
-.input__entry{
+.input__entry {
 	outline-width: 0;
 	color: var(--black);
 	border: 1px solid var(--grey-medium);
 	border-radius: 10px;
 	padding: 10px 15px;
 	margin-bottom: 20px;
+}
+.input__entry--no-margin {
+	margin-bottom: 0px;
 }
