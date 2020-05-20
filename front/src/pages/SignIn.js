@@ -58,7 +58,7 @@ function SignIn(props) {
 			return await axios.post(config.backend.url + "/user/signin", fields);
 		} catch (error) {
 			props.setMessageType("failure");
-			props.setMessage("Can not contact securechat servers :(");
+			props.setMessage("Can not contact servers :(");
 		}
 	}
 

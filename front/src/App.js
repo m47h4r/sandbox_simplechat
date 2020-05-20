@@ -66,6 +66,8 @@ function App() {
 							<Switch>
 								<Route exact path="/">
 									<Home
+										setMessage={setMessage}
+										setMessageType={setMessageType}
 										sessionCookie={cookies["session-cookie"]}
 										setSessionCookie={setCookie}
 										isLoggedIn={isLoggedIn}
