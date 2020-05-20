@@ -1,0 +1,10 @@
+@import "../assets/css/var.css";
+
+.add-contact-wrapper {
+	background-color: var(--grey-light);
+	padding: 5px 15px 15px 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
