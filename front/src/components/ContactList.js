@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 import Button from "./Button";
 import AddContact from "./AddContact";
-
-import axios from "axios";
 
 import config from "../config/";
 
@@ -35,14 +35,18 @@ function ContactList(props) {
 	const generateContactList = () => {
 		if (contactList) {
 			return contactList.map((currentContact) => (
-				<div
+				<Link
+					to={{
+						pathname: "/chat",
+						state: { contact: currentContact.email }
+					}}
 					className="contact"
 					key={currentContact.name + currentContact.surname}
 					onClick={someFunc}
 				>
 					<div className="contact__name">{currentContact.name}</div>
 					<div className="contact__surname">{currentContact.surname}</div>
-				</div>
+				</Link>
 			));
 		}
 	};

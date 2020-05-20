@@ -14,6 +14,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
 import Message from "./components/Message";
+import Chat from "./pages/Chat";
 
 import { checkUserSession, updateSessionTime } from "./utils/session";
 
@@ -92,6 +93,20 @@ function App() {
 										isLoggedIn={isLoggedIn}
 										setIsLoggedIn={setIsLoggedIn}
 									/>
+								</Route>
+								<Route path="/chat"
+									render={renderProps => (
+										<Chat 
+											setMessage={setMessage}
+											setMessageType={setMessageType}
+											sessionCookie={cookies["session-cookie"]}
+											setSessionCookie={setCookie}
+											isLoggedIn={isLoggedIn}
+											setIsLoggedIn={setIsLoggedIn}
+											renderProps={renderProps}
+										/>
+									)}
+									>
 								</Route>
 							</Switch>
 						</div>
