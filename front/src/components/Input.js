@@ -5,7 +5,9 @@ import "./Input.css";
 function Input(props) {
 	return (
 		<>
-			<p className="input__label">{props.name}:</p>
+			{props.noLabel ? null : 
+				<p className="input__label">{props.name}:</p>
+			}
 			<input
 				className={
 					props.noMargin
@@ -17,6 +19,7 @@ function Input(props) {
 				placeholder={props.placeholder}
 				value={props.value}
 				onChange={props.handleChange}
+				style={props.style}
 			/>
 		</>
 	);
