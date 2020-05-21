@@ -37,7 +37,7 @@ function ContactList(props) {
 				<Link
 					to={{
 						pathname: "/chat",
-						state: { contact: currentContact.email }
+						state: { contact: currentContact._id }
 					}}
 					className="contact"
 					key={currentContact.name + currentContact.surname}

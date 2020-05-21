@@ -135,7 +135,7 @@ router.post("/addContact", (request, response) => {
 router.post("/getContactList", (request, response) => {
 	User.findOne(
 		{ sessionSecret: request.body.claimedSessionSecret })
-		.populate('contacts', 'name surname email')
+		.populate('contacts', 'name surname')
 		.exec(async (error, user) => {
 			if (!user || error) {
 				return response.json({ result: false, error: "An error occured" });
