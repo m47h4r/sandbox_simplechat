@@ -28,7 +28,9 @@ function App() {
 
 	useEffect(() => {
 		const checkSession = async () => {
-			setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
+			if (cookies["session-cookie"]) {
+				setIsLoggedIn(await checkUserSession(cookies["session-cookie"]));
+			}
 		};
 		checkSession();
 	}, [cookies["session-cookie"]]);
@@ -70,7 +72,6 @@ function App() {
 										setMessage={setMessage}
 										setMessageType={setMessageType}
 										sessionCookie={cookies["session-cookie"]}
-										setSessionCookie={setCookie}
 										isLoggedIn={isLoggedIn}
 									/>
 								</Route>
@@ -94,20 +95,19 @@ function App() {
 										setIsLoggedIn={setIsLoggedIn}
 									/>
 								</Route>
-								<Route path="/chat"
-									render={renderProps => (
-										<Chat 
+								<Route
+									path="/chat"
+									render={(renderProps) => (
+										<Chat
 											setMessage={setMessage}
 											setMessageType={setMessageType}
 											sessionCookie={cookies["session-cookie"]}
-											setSessionCookie={setCookie}
 											isLoggedIn={isLoggedIn}
 											setIsLoggedIn={setIsLoggedIn}
 											renderProps={renderProps}
 										/>
 									)}
-									>
-								</Route>
+								></Route>
 							</Switch>
 						</div>
 					</div>

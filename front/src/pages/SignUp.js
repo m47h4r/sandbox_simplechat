@@ -88,6 +88,7 @@ function SignUp(props) {
 					signUpResult.data.user.sessionSecret,
 					{
 						path: "/",
+						maxAge: 7 * 24 * 60 * 60
 					}
 				);
 				props.setIsLoggedIn(true);

@@ -19,7 +19,6 @@ function ContactList(props) {
 				config.backend.url + "/user/getContactList",
 				{ claimedSessionSecret: props.sessionCookie }
 			);
-			console.log(result);
 			setContactList(result.data.contactList);
 		};
 		getContactList();

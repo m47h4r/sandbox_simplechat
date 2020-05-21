@@ -76,6 +76,9 @@ router.post("/signout", (request, response) => {
 });
 
 router.post("/checkSession", (request, response) => {
+	if (!request.body.claimedSessionSecret) {
+		return response.json({ result: false });
+	}
 	User.findOne(
 		{ sessionSecret: request.body.claimedSessionSecret },
 		async (error, user) => {
