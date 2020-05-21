@@ -1,8 +1,17 @@
 import React from "react";
 
+import "./ChatMessageList.css";
+
 function ChatMessageList(props) {
 	return (
-		<p>This is chat message list</p>
+		<div className="chat-message-list">
+			<div className="chat-message chat-message--receiver">
+				I am someone
+			</div>
+			<div className="chat-message chat-message--sender">
+				I am mazhar
+			</div>
+		</div>
 	);
 }
 
