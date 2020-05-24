@@ -8,11 +8,11 @@ let MessageSchema = new mongoose.Schema(
 			required: [true, "can't be blank"]
 		},
 		from: {
-			type: Schema.Type.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'User'
 		},
 		to: {
-			type: Schema.Type.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'User'
 		}
 	},

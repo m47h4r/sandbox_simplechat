@@ -14,12 +14,11 @@ function ChatMessageList(props) {
 			{props.messages.map((message) => (
 				message.isSender ?
 				<div className="chat-message chat-message--sender">
-					message.text
-					I am sender
+					{message.text}
 				</div>
 				:
 				<div className="chat-message chat-message--receiver">
-					message.text
+					{message.text}
 				</div>
 			))}
 			</>
