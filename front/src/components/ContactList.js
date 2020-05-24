@@ -28,20 +28,16 @@ function ContactList(props) {
 		setIsAddContactPresent(!isAddContactPresent);
 	};
 
-	// TODO: v
-	const someFunc = () => { console.log('will be implemented') };
-
 	const generateContactList = () => {
 		if (contactList) {
 			return contactList.map((currentContact) => (
 				<Link
 					to={{
 						pathname: "/chat",
-						state: { contact: currentContact._id }
+						state: { contact: currentContact }
 					}}
 					className="contact"
 					key={currentContact.name + currentContact.surname}
-					onClick={someFunc}
 				>
 					<div className="contact__name">{currentContact.name}</div>
 					<div className="contact__surname">{currentContact.surname}</div>
