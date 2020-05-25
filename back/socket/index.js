@@ -30,7 +30,7 @@ const getMessages = async (userId, contactId) => {
 	}
 }
 
-const generateMessageList = (messages) => {
+const generateMessageList = (messages, userId) => {
 	let dataToReturn = [];
 	for (let iterator in messages) {
 		let temp = {
@@ -38,7 +38,7 @@ const generateMessageList = (messages) => {
 			date: messages[iterator].createdAt,
 			from: messages[iterator].from.name + " " + messages[iterator].from.surname,
 			to: messages[iterator].to.name + " " + messages[iterator].to.surname,
-			isSender: messages[iterator].from._id.toString() === user._id.toString(),
+			isSender: messages[iterator].from._id.toString() === userId.toString(),
 			text: messages[iterator].text
 		}
 		dataToReturn.push(temp);
@@ -52,7 +52,7 @@ function socket(io) {
 			const user = await getUser(data.session_id);
 			if (!user) { return cb({result: false, error: "Session not valid"}); }
 			const messages = await getMessages(user._id, data.contact_id)
-			const generatedMessageList = generateMessageList(messages);
+			const generatedMessageList = generateMessageList(messages, user._id);
 			cb({result: true, data: generatedMessageList });
 		});
 	});
