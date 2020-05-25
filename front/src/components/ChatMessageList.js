@@ -34,6 +34,7 @@ function ChatMessageList(props) {
 	return (
 		<div className="chat-message-list">
 			{props.messages ? renderMessages() : <p>There are no messages.</p>}
+			<div className="chat-message-list-end"></div>
 		</div>
 	);
 }
