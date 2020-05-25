@@ -46,6 +46,21 @@ const generateMessageList = (messages, userId) => {
 	return dataToReturn;
 }
 
+const saveMessage = async (userId, contactId, text) => {
+	try {
+		let message = new Message({
+			from: userId,
+			to: contactId,
+			text: text
+		});
+		let saved_message = await message.save();
+		console.log(saved_message)
+		return { result: true, message_id: saved_message._id };
+	} catch(e) {
+		return { result: false };
+	}
+}
+
 function socket(io) {
 	io.on('connection', (socket) => {
 		socket.on('get-chat-messages', async (data, cb) => {
@@ -54,6 +69,14 @@ function socket(io) {
 			const messages = await getMessages(user._id, data.contact_id)
 			const generatedMessageList = generateMessageList(messages, user._id);
 			cb({result: true, data: generatedMessageList });
+		});
+
+		socket.on('send-message', async (data, cb) => {
+			const user = await getUser(data.session_id);
+			if (!user) { return cb({result: false, error: "Session not valid"}); }
+			const res = await saveMessage(user._id, data.contact_id, data.message);
+			if (!res.result) { return cb({result: false, error: "Database error"}); }
+			else { return cb({result: true, message_id: res.message_id}); }
 		});
 	});
 }

@@ -17,8 +17,16 @@ function ChatInput(props) {
 		}
 	}
 
-	// TODO: v
-	const sendMessage = () => {}
+	const clickHandler = () => {
+		props.sendMessage(
+			props.sessionCookie,
+			props.contact._id,
+			message,
+			(result) => {
+				console.log(result);
+			}
+		);
+	}
 
 	return (
 		<>
@@ -26,7 +34,7 @@ function ChatInput(props) {
 				<Input 
 					name="message"
 					type="text"
-					placeholder="..."
+					placeholder=". . ."
 					value={message}
 					handleChange={handleChange}
 					noMargin={true}
@@ -36,7 +44,7 @@ function ChatInput(props) {
 				<Button
 					type="button"
 					text="Send"
-					onClick={sendMessage}
+					onClick={clickHandler}
 				/>
 			</div>
 		</>
