@@ -18,6 +18,7 @@ function ChatInput(props) {
 	}
 
 	const clickHandler = () => {
+		setMessage("");
 		props.sendMessage(
 			props.sessionCookie,
 			props.contact._id,
