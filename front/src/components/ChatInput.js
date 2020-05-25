@@ -23,7 +23,9 @@ function ChatInput(props) {
 			props.contact._id,
 			message,
 			(result) => {
-				console.log(result);
+				// TODO: must handle error here
+				// successful ones are not important because they will
+				// be calling 'new-message' event and will be shown
 			}
 		);
 	}

@@ -46,6 +46,19 @@ const generateMessageList = (messages, userId) => {
 	return dataToReturn;
 }
 
+const generateMessage = (message, userId) => {
+	console.log(message);
+	let msg = {
+		_id: message._id,
+		date: message.createdAt,
+		from: message.from.name + " " + message.from.surname,
+		from_id: message.from._id,
+		to: message.to.name + " " + message.to.surname,
+		text: message.text
+	}
+	return msg;
+}
+
 const saveMessage = async (userId, contactId, text) => {
 	try {
 		let message = new Message({
@@ -53,10 +66,18 @@ const saveMessage = async (userId, contactId, text) => {
 			to: contactId,
 			text: text
 		});
-		await message.save();
-		return true;
+		let saved_message = await message.save();
+		try {
+			let msg = await Message.findOne({ _id: saved_message._id })
+			.populate('from', 'name surname')
+			.populate('to', 'name surname')
+			.exec();
+			return { result: true, message: msg };
+		} catch(e) {
+			return { result: false };
+		}
 	} catch(e) {
-		return false;
+		return { result: false };
 	}
 }
 
@@ -73,9 +94,19 @@ function socket(io) {
 		socket.on('send-message', async (data, cb) => {
 			const user = await getUser(data.session_id);
 			if (!user) { return cb({result: false, error: "Session not valid"}); }
-			const result = await saveMessage(user._id, data.contact_id, data.message);
-			if (!result) { return cb({result: false, error: "Database error"}); }
-			else { return cb({result: true}); }
+			const res = await saveMessage(user._id, data.contact_id, data.message);
+			if (!res.result) { return cb({result: false, error: "Database error"}); }
+			else { 
+				cb({result: true});
+				const message = generateMessage(res.message, user._id);
+				io.emit('new-message', { message: message });
+			}
+		});
+
+		socket.on('check-is-user-sender', async (data, cb) => {
+			const user = await getUser(data.session_id);
+			if (!user) { return cb({result: false, error: "Session not valid"}) };
+			return cb({result: user._id.toString() === data.from.toString()});
 		});
 	});
 }

@@ -11,7 +11,7 @@ let socket = null;
 function Chat(props) {
 	const [messages, setMessages] = useState(null);
 
-	const updateMessages = () => {
+	const setMessageList = () => {
 		socket.emit(
 			"get-chat-messages",
 			{
@@ -38,9 +38,27 @@ function Chat(props) {
 		);
 	};
 
+	const updateMessageList = (message) => {
+		console.log(message);
+		socket.emit('check-is-user-sender',
+			{ session_id: props.sessionCookie, from: message.from_id },
+			(result) => {
+				if (result.result) {
+					message.isSender = true;
+				} else {
+					message.isSender = false;
+				}
+				setMessages((oldMessages) => [...oldMessages, message]);
+			}
+		);
+	}
+
 	useEffect(() => {
 		socket = io(config.backend.url);
-		updateMessages(socket);
+		setMessageList();
+		socket.on('new-message', (data) => {
+			updateMessageList(data.message);
+		});
 	}, []);
 
 	return (
