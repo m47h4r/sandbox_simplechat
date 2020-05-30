@@ -39,7 +39,6 @@ function Chat(props) {
 	};
 
 	const updateMessageList = (message) => {
-		console.log(message);
 		socket.emit('check-is-user-sender',
 			{ session_id: props.sessionCookie, from: message.from_id },
 			(result) => {
