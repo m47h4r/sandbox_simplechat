@@ -36,7 +36,8 @@ router.post("/signup", (request, response) => {
 
 router.post("/signin", (request, response) => {
 	User.findOne({ email: request.body.email }, async (error, user) => {
-		if (error || !user || !user.verifyPassword(request.body.password)) {
+		const passwordVerificationStatus = await user.verifyPassword(request.body.password);
+		if (error || !user || !passwordVerificationStatus) {
 			response.json({ status: "failure", error: "An error occured" });
 		} else {
 			//if (!user.isSessionValid(request.body.sessionID)) {
