@@ -10,7 +10,7 @@ require("./models/User");
 require("./models/Message");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const userRouter = require("./routes/user");
 
 const app = express();
 
@@ -27,6 +27,6 @@ mongoose.connection.once("open", () => {
 });
 
 app.use("/", indexRouter);
-app.use("/user", usersRouter);
+app.use("/user", userRouter);
 
 module.exports = app;

@@ -6,55 +6,76 @@ const debug = require("debug")("back:server");
 const config = require("../config/");
 const generateStringID = require("../utils/stringIDGenerator");
 
-router.post("/signup", (request, response) => {
-	let user = new User({
+const createNewUser = (credentials) => {
+	return new User({
+		name: credentials.name,
+		surname: credentials.surname,
+		email: credentials.email,
+		bio: credentials.bio,
+		password: credentials.password,
+		sessionSecret: generateStringID(config.general.stringIDLength),
+		lastAccessed: new Date(),
+	});
+};
+
+const createSessionAndUpdateDB = async (user) => {
+	try {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+		user.sessionSecret = sessionSecret;
+		user.lastAccessed = new Date();
+		await user.save();
+		return { status: true, sessionSecret: sessionSecret };
+	} catch (e) {
+		debug(e);
+		return { status: false };
+	}
+};
+
+router.post("/signup", async (request, response) => {
+	let newUser = createNewUser({
 		name: request.body.name,
 		surname: request.body.surname,
 		email: request.body.email,
 		bio: request.body.bio,
 		password: request.body.password,
-		sessionSecret: generateStringID(config.general.stringIDLength),
-		lastAccessed: new Date(),
 	});
-	user.save((error) => {
-		if (error) {
-			debug(error);
-			// TODO: must differentiate between errors, like email taken
-			response.json({ status: "failure", error: "Database error." });
-		} else {
-			response.json({
-				status: "success",
-				user: {
-					name: user.name,
-					surname: user.surname,
-					sessionSecret: user.sessionSecret,
-				},
-			});
-		}
-	});
+	try {
+		await newUser.save();
+		response.json({
+			status: "success",
+			user: {
+				name: newUser.name,
+				surname: newUser.surname,
+				sessionSecret: newUser.sessionSecret,
+			},
+		});
+	} catch (e) {
+		debug(e);
+		response.json({ status: "failure", error: "Database error occured." });
+	}
 });
 
 router.post("/signin", (request, response) => {
 	User.findOne({ email: request.body.email }, async (error, user) => {
-		const passwordVerificationStatus = await user.verifyPassword(request.body.password);
-		if (error || !user || !passwordVerificationStatus) {
-			response.json({ status: "failure", error: "An error occured" });
-		} else {
-			//if (!user.isSessionValid(request.body.sessionID)) {
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			user.sessionSecret = sessionSecret;
-			user.lastAccessed = new Date();
-			await user.save();
-			response.json({
-				status: "success",
-				user: {
-					name: user.name,
-					surname: user.surname,
-					sessionSecret: sessionSecret,
-				},
-			});
-			//}
+		const isPasswordVerified = await user.verifyPassword(request.body.password);
+		if (error || !user || !isPasswordVerified) {
+			return response.json({ status: "failure", error: "An error occured" });
 		}
+		const sessionCreationResult = await createSessionAndUpdateDB(user);
+		if (!sessionCreationResult.status) {
+			return response.json({
+				status: "failure",
+				error: "Database error occured.",
+			});
+		}
+		response.json({
+			status: "success",
+			user: {
+				name: user.name,
+				surname: user.surname,
+				sessionSecret: sessionCreationResult.sessionSecret,
+			},
+		});
 	});
 });
 
@@ -134,16 +155,14 @@ router.post("/addContact", (request, response) => {
 });
 
 router.post("/getContactList", (request, response) => {
-	User.findOne(
-		{ sessionSecret: request.body.claimedSessionSecret })
-		.populate('contacts', 'name surname')
+	User.findOne({ sessionSecret: request.body.claimedSessionSecret })
+		.populate("contacts", "name surname")
 		.exec(async (error, user) => {
 			if (!user || error) {
 				return response.json({ result: false, error: "An error occured" });
 			}
 			return response.json({ result: true, contactList: user.contacts });
-		}
-	);
+		});
 });
 
 module.exports = router;
