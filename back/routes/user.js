@@ -55,11 +55,15 @@ router.post("/signup", async (request, response) => {
 	}
 });
 
-router.post("/signin", (request, response) => {
-	User.findOne({ email: request.body.email }, async (error, user) => {
+router.post("/signin", async (request, response) => {
+	try {
+		let user = await User.findOne({ email: request.body.email });
+		if (!user) {
+			return response.json({ status: "failure", error: "Wrong credentials." });
+		}
 		const isPasswordVerified = await user.verifyPassword(request.body.password);
-		if (error || !user || !isPasswordVerified) {
-			return response.json({ status: "failure", error: "An error occured" });
+		if (!isPasswordVerified) {
+			return response.json({ status: "failure", error: "Wrong credentials." });
 		}
 		const sessionCreationResult = await createSessionAndUpdateDB(user);
 		if (!sessionCreationResult.status) {
@@ -76,7 +80,10 @@ router.post("/signin", (request, response) => {
 				sessionSecret: sessionCreationResult.sessionSecret,
 			},
 		});
-	});
+	} catch (e) {
+		debug(e);
+		response.json({ status: "failure", error: "Database error occured." });
+	}
 });
 
 router.post("/signout", (request, response) => {
