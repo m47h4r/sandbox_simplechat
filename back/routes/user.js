@@ -86,20 +86,13 @@ router.post("/signin", async (request, response) => {
 	}
 });
 
-router.post("/signout", (request, response) => {
-	User.findOne(
-		{ sessionSecret: request.body.sessionSecret },
-		async (error, user) => {
-			if (!user) {
-				return response.json({
-					result: false,
-					error: "No such session found!",
-				});
-			}
-			user.sessionSecret = null;
-			user.lastAccessed = new Date();
-			await user.save();
-			return response.json({ status: "success" });
+router.post("/signout", async (request, response) => {
+	try {
+		let user = await User.findOne({
+			sessionSecret: request.body.sessionSecret,
+		});
+		if (!user) {
+			return response.json({ result: false, error: "Session not found." });
 		}
 	);
 });
@@ -124,41 +117,25 @@ router.post("/checkSession", (request, response) => {
 	);
 });
 
-router.post("/updateSessionTime", (request, response) => {
-	User.findOne(
-		{ sessionSecret: request.body.claimedSessionSecret },
-		async (error, user) => {
-			if (!user || error) {
-				return response.json({ result: false });
-			}
-			const currentDate = new Date();
-			user.lastAccessed = currentDate;
-			await user.save();
-			return response.json({ result: true });
+router.post("/contacts/add", async (request, response) => {
+	try {
+		let user = await User.findOne({
+			sessionSecret: request.body.claimedSessionSecret,
+		});
+		if (!user) {
+			return response.json({ result: false, error: "An error occured." });
 		}
-	);
-});
-
-router.post("/addContact", (request, response) => {
-	User.findOne(
-		{ sessionSecret: request.body.claimedSessionSecret },
-		async (errorSession, user) => {
-			if (!user || errorSession) {
-				return response.json({ result: false, error: "An error occured." });
-			}
-			User.findOne(
-				{ email: request.body.email },
-				async (errorContact, contact) => {
-					if (!contact || errorContact) {
-						return response.json({ result: false, error: "User not found." });
-					}
-					user.contacts.push(contact._id);
-					await user.save();
-					return response.json({ result: true });
-				}
-			);
+		let contact = await User.findOne({ email: request.body.email });
+		if (!contact) {
+			return response.json({ result: false, error: "User not found." });
 		}
-	);
+		user.contacts.push(contact._id);
+		await user.save();
+		return response.json({ result: true });
+	} catch (e) {
+		debug(e);
+		response.json({ result: false, error: "An error occured." });
+	}
 });
 
 router.post("/getContactList", (request, response) => {

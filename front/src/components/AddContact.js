@@ -14,7 +14,7 @@ function AddContact(props) {
 
 	const makeAddContactRequest = async (fields) => {
 		try {
-			return await axios.post(config.backend.url + "/user/addContact", fields);
+			return await axios.post(config.backend.url + "/user/contacts/add", fields);
 		} catch (error) {
 			props.setMessageType("failure");
 			props.setMessage("Can not contact servers :(");
@@ -27,6 +27,7 @@ function AddContact(props) {
 			email: contactEmail
 		};
 		let result = await makeAddContactRequest(fields);
+		// TODO: must show user a message
 		console.log(result);
 	};
 

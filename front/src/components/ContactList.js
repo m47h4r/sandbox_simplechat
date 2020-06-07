@@ -15,9 +15,8 @@ function ContactList(props) {
 
 	useEffect(() => {
 		const getContactList = async () => {
-			const result = await axios.post(
-				config.backend.url + "/user/getContactList",
-				{ claimedSessionSecret: props.sessionCookie }
+			const result = await axios.get(
+				config.backend.url + "/user/contacts/" + props.sessionCookie,
 			);
 			setContactList(result.data.contactList);
 		};

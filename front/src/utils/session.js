@@ -4,16 +4,16 @@ import axios from "axios";
 
 const checkUserSession = async (claimedSessionSecret) => {
 	// result := true | false
-	let result = await axios.post(config.backend.url + "/user/checkSession", {
-		claimedSessionSecret: claimedSessionSecret,
-	});
+	let result = await axios.get(
+		config.backend.url + "/session/check/" + claimedSessionSecret
+	);
 	return result.data.result;
 };
 
 const updateSessionTime = async (claimedSessionSecret) => {
 	// result := true | false
 	let result = await axios.post(
-		config.backend.url + "/user/updateSessionTime",
+		config.backend.url + "/session/update",
 		{ claimedSessionSecret: claimedSessionSecret }
 	);
 	return result.data.result;
