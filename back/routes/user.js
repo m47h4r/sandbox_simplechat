@@ -94,27 +94,14 @@ router.post("/signout", async (request, response) => {
 		if (!user) {
 			return response.json({ result: false, error: "Session not found." });
 		}
-	);
-});
-
-router.post("/checkSession", (request, response) => {
-	if (!request.body.claimedSessionSecret) {
-		return response.json({ result: false });
+		user.sessionSecret = null;
+		user.lastAccessed = new Date();
+		await user.save();
+		return response.json({ status: "success" });
+	} catch (e) {
+		debug(e);
+		response.json({ result: false, error: "Database error occured." });
 	}
-	User.findOne(
-		{ sessionSecret: request.body.claimedSessionSecret },
-		async (error, user) => {
-			if (!user || error) {
-				return response.json({ result: false });
-			}
-			const expirationDate = new Date(
-				user.lastAccessed.getTime() + config.general.validSessionTime
-			);
-			return response.json({
-				result: new Date().getTime() <= expirationDate.getTime(),
-			});
-		}
-	);
 });
 
 router.post("/contacts/add", async (request, response) => {
@@ -138,15 +125,20 @@ router.post("/contacts/add", async (request, response) => {
 	}
 });
 
-router.post("/getContactList", (request, response) => {
-	User.findOne({ sessionSecret: request.body.claimedSessionSecret })
-		.populate("contacts", "name surname")
-		.exec(async (error, user) => {
-			if (!user || error) {
-				return response.json({ result: false, error: "An error occured" });
-			}
-			return response.json({ result: true, contactList: user.contacts });
-		});
+router.get("/contacts/:session", async (request, response) => {
+	const claimedSession = request.params.session;
+	try {
+		let user = await User.findOne({ sessionSecret: claimedSession })
+			.populate("contacts", "name surname")
+			.exec();
+		if (!user) {
+			return response.json({ result: false, error: "Invalid session." });
+		}
+		response.json({ result: true, contactList: user.contacts });
+	} catch (e) {
+		debug(e);
+		response.json({ result: false, error: "Database error occured." });
+	}
 });
 
 module.exports = router;

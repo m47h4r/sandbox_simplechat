@@ -11,6 +11,7 @@ require("./models/Message");
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const sessionRouter = require("./routes/session");
 
 const app = express();
 
@@ -28,5 +29,6 @@ mongoose.connection.once("open", () => {
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/session", sessionRouter);
 
 module.exports = app;
