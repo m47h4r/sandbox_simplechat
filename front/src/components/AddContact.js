@@ -27,8 +27,15 @@ function AddContact(props) {
 			email: contactEmail
 		};
 		let result = await makeAddContactRequest(fields);
+		console.log(result)
 		// TODO: must show user a message
-		console.log(result);
+		if (!result.data.result) {
+			props.setMessageType("failure");
+			props.setMessage(result.data.error);
+			return;
+		}
+		props.setContactUpdateTrigger(props.setContactUpdateTrigger + 1);
+		setContactEmail("");
 	};
 
 	const handleChange = (e) => {

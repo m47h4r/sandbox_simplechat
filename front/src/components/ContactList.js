@@ -12,17 +12,17 @@ import "./ContactList.css";
 function ContactList(props) {
 	const [isAddContactPresent, setIsAddContactPresent] = useState(false);
 	const [contactList, setContactList] = useState(null);
+	const [contactUpdateTrigger, setContactUpdateTrigger] = useState(0);
 
 	useEffect(() => {
 		const getContactList = async () => {
-			const result = await axios.get(
-				config.backend.url + "/user/contacts",
-				{ headers: { claimedsession: props.sessionCookie } }
-			);
+			const result = await axios.get(config.backend.url + "/user/contacts", {
+				headers: { claimedsession: props.sessionCookie },
+			});
 			setContactList(result.data.contactList);
 		};
 		getContactList();
-	}, [props.sessionCookie]);
+	}, [props.sessionCookie, contactUpdateTrigger]);
 
 	const toggleAddContact = () => {
 		setIsAddContactPresent(!isAddContactPresent);
@@ -34,7 +34,7 @@ function ContactList(props) {
 				<Link
 					to={{
 						pathname: "/chat",
-						state: { contact: currentContact }
+						state: { contact: currentContact },
 					}}
 					className="contact"
 					key={currentContact.name + currentContact.surname}
@@ -60,7 +60,13 @@ function ContactList(props) {
 					</div>
 				</div>
 				{isAddContactPresent ? (
-					<AddContact sessionCookie={props.sessionCookie} />
+					<AddContact
+						sessionCookie={props.sessionCookie}
+						setMessage={props.setMessage}
+						setMessageType={props.setMessageType}
+						contactUpdateTrigger={contactUpdateTrigger}
+						setContactUpdateTrigger={setContactUpdateTrigger}
+					/>
 				) : null}
 				<div className="contact-list-body">{generateContactList()}</div>
 			</div>
