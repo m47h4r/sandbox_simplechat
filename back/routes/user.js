@@ -125,8 +125,8 @@ router.post("/contacts/add", async (request, response) => {
 	}
 });
 
-router.get("/contacts/:session", async (request, response) => {
-	const claimedSession = request.params.session;
+router.get("/contacts", async (request, response) => {
+	const claimedSession = request.headers.claimedsession;
 	try {
 		let user = await User.findOne({ sessionSecret: claimedSession })
 			.populate("contacts", "name surname")

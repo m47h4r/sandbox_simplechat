@@ -5,8 +5,8 @@ const User = mongoose.model("User");
 const debug = require("debug")("back:server");
 const config = require("../config/");
 
-router.get("/check/:session", async (request, response) => {
-	const claimedSession = request.params.session;
+router.get("/check", async (request, response) => {
+	const claimedSession = request.headers.claimedsession;
 	if (!claimedSession) {
 		return response.json({ result: false });
 	}

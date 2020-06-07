@@ -5,7 +5,8 @@ import axios from "axios";
 const checkUserSession = async (claimedSessionSecret) => {
 	// result := true | false
 	let result = await axios.get(
-		config.backend.url + "/session/check/" + claimedSessionSecret
+		config.backend.url + "/session/check/",
+		{ headers: { claimedsession: claimedSessionSecret } }
 	);
 	return result.data.result;
 };
