@@ -27,8 +27,6 @@ function AddContact(props) {
 			email: contactEmail
 		};
 		let result = await makeAddContactRequest(fields);
-		console.log(result)
-		// TODO: must show user a message
 		if (!result.data.result) {
 			props.setMessageType("failure");
 			props.setMessage(result.data.error);

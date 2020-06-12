@@ -11,12 +11,12 @@ let UserSchema = new mongoose.Schema(
 		name: {
 			type: String,
 			required: [true, "can't be blank"],
-			match: [/^[a-zA-Z]{2,}$/, "is invalid"],
+			match: [/^[a-zA-Z\s-]{3,}$/, "is invalid"],
 		},
 		surname: {
 			type: String,
 			required: [true, "can't be blank"],
-			match: [/^[a-zA-Z]{2,}$/, "is invalid"],
+			match: [/^[a-zA-Z\s-]{3,}$/, "is invalid"],
 		},
 		//name: { type: String, required: [true, "can't be blank"] },
 		// I have no idea why is this here, please delete if it doesn't affect

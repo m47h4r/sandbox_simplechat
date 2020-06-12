@@ -9,14 +9,16 @@ let MessageSchema = new mongoose.Schema(
 		},
 		from: {
 			type: Schema.Types.ObjectId,
-			ref: 'User'
+			ref: 'User',
+			required: [true, "can't be blank"]
 		},
 		to: {
 			type: Schema.Types.ObjectId,
-			ref: 'User'
+			ref: 'User',
+			required: [true, "can't be blank"]
 		}
 	},
 	{ timestamps: true }
 );
 
-mongoose.model("Message", MessageSchema);
+module.exports = mongoose.model("Message", MessageSchema);
