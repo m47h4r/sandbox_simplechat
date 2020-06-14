@@ -39,7 +39,7 @@ let UserSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-async function generateHashedPassword (plainTextPassword) {
+async function generateHashedPassword(plainTextPassword) {
 	try {
 		const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 		const hash = await bcrypt.hash(plainTextPassword, salt);
@@ -47,6 +47,9 @@ async function generateHashedPassword (plainTextPassword) {
 	} catch (e) {
 		debug(e);
 	}
+}
+async function checkPlainTextOverHash(plainText, hash) {
+	return (await bcrypt.compare(plainText, hash));
 }
 
 UserSchema.pre("save", async function (next) {
@@ -65,8 +68,11 @@ UserSchema.plugin(uniqueValidator, {
 });
 
 UserSchema.methods.verifyPassword = async function (claimedPassword) {
-	const match = await bcrypt.compare(claimedPassword, this.password);
-	return match;
+	return (await checkPlainTextOverHash(claimedPassword, this.password));
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = {
+	User: mongoose.model("User", UserSchema),
+	generateHashedPassword: generateHashedPassword,
+	checkPlainTextOverHash: checkPlainTextOverHash
+};
