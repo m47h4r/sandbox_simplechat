@@ -9,7 +9,6 @@ const debug = require("debug")("back:server");
 require("./models/User");
 require("./models/Message");
 
-const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
 const sessionRouter = require("./routes/session");
 
@@ -27,7 +26,6 @@ mongoose.connection.once("open", () => {
 	debug("connected to database");
 });
 
-app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/session", sessionRouter);
 
