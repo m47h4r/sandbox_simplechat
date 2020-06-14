@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 const config = require("../config/");
 const debug = require("debug")("back:server");
@@ -62,10 +61,6 @@ UserSchema.pre("save", async function (next) {
 	const hashedPassword = await generateHashedPassword(user.password);
 	user.password = hashedPassword;
 	next();
-});
-
-UserSchema.plugin(uniqueValidator, {
-	message: "is already taken.",
 });
 
 UserSchema.methods.verifyPassword = async function (claimedPassword) {
