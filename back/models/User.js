@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 const config = require("../config/");
+const debug = require("debug")("back:server");
 
-const SALT = config.passwd.bcrypt_salt_work_factor;
+const SALT_WORK_FACTOR = config.passwd.bcrypt_salt_work_factor;
 
 let UserSchema = new mongoose.Schema(
 	{
@@ -38,20 +39,25 @@ let UserSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-UserSchema.pre("save", function (next) {
+async function generateHashedPassword (plainTextPassword) {
+	try {
+		const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+		const hash = await bcrypt.hash(plainTextPassword, salt);
+		return hash;
+	} catch (e) {
+		debug(e);
+	}
+}
+
+UserSchema.pre("save", async function (next) {
 	const user = this;
 
 	// only hash the password if it has been modified (or is new)
 	if (!user.isModified("password")) return next();
 
-	bcrypt.genSalt(SALT, function (err, salt) {
-		if (err) return next(err);
-		bcrypt.hash(user.password, salt, function (err, hash) {
-			if (err) return next(err);
-			user.password = hash;
-			next();
-		});
-	});
+	const hashedPassword = await generateHashedPassword(user.password);
+	user.password = hashedPassword;
+	next();
 });
 
 UserSchema.plugin(uniqueValidator, {
