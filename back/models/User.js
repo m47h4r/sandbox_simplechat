@@ -48,6 +48,7 @@ async function generateHashedPassword(plainTextPassword) {
 		debug(e);
 	}
 }
+
 async function checkPlainTextOverHash(plainText, hash) {
 	return (await bcrypt.compare(plainText, hash));
 }
