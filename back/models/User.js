@@ -18,9 +18,6 @@ let UserSchema = new mongoose.Schema(
 			required: [true, "can't be blank"],
 			match: [/^[a-zA-Z\s-]{3,}$/, "is invalid"],
 		},
-		//name: { type: String, required: [true, "can't be blank"] },
-		// I have no idea why is this here, please delete if it doesn't affect
-		// antyhing in future (and please write some tests to avoid this)
 		email: {
 			type: String,
 			lowercase: true,
@@ -33,7 +30,7 @@ let UserSchema = new mongoose.Schema(
 		password: String,
 		sessionSecret: {
 			type: String,
-			require: [true, "can't be blank"],
+			required: [true, "can't be blank"],
 		},
 		lastAccessed: Date,
 		contacts: [{ type: Schema.Types.ObjectId, ref: "User" }],
@@ -66,9 +63,4 @@ UserSchema.methods.verifyPassword = async function (claimedPassword) {
 	return match;
 };
 
-// not used even once, must validate when checking session for different tasks
-UserSchema.methods.isSessionValid = (claimedSessionSecret) => {
-	return this.sessionSecret === claimedSessionSecret;
-};
-
-mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
