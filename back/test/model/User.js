@@ -7,13 +7,40 @@ const { checkPlainTextOverHash } = require("../../models/User");
 
 describe("model:User", function () {
 	describe("Emptiness", function () {
-		it("should be invalid if 'name' is empty", async function () {
-			try {
-				const user = new User({ name: "" });
-				await user.validate("name", ["name"]);
-			} catch (err) {
+		it("should be invalid if 'name' is empty", function(done) {
+			const user = new User({ name: ""});
+			user.validate(["name"], function(err) {
 				expect(err.errors.name).to.exist;
-			}
+				done();
+			});
+		});
+		it("should be invalid if 'surname' is empty", function(done) {
+			const user = new User({ surname: ""});
+			user.validate(["surname"], function(err) {
+				expect(err.errors.surname).to.exist;
+				done();
+			});
+		});
+		it("should be invalid if 'email' is empty", function(done) {
+			const user = new User({ email: ""});
+			user.validate(["email"], function(err) {
+				expect(err.errors.email).to.exist;
+				done();
+			});
+		});
+		it("should be invalid if 'password' is empty", function(done) {
+			const user = new User({ password: ""});
+			user.validate(["password"], function(err) {
+				expect(err.errors.password).to.exist;
+				done();
+			});
+		});
+		it("should be invalid if 'sessionSecret' is empty", function(done) {
+			const user = new User({ sessionSecret: ""});
+			user.validate(["sessionSecret"], function(err) {
+				expect(err.errors.sessionSecret).to.exist;
+				done();
+			});
 		});
 	});
 

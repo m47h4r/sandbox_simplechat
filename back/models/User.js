@@ -27,7 +27,10 @@ let UserSchema = new mongoose.Schema(
 			index: true,
 		},
 		bio: String,
-		password: String,
+		password: {
+			type: String,
+			required: [true, "can't be blank"]
+		},
 		sessionSecret: {
 			type: String,
 			required: [true, "can't be blank"],
