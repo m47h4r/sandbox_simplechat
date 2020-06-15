@@ -1,5 +1,4 @@
 const expect = require("chai").expect;
-const mongoose = require("mongoose");
 const Message = require("../../models/Message");
 
 describe("model:Message", function () {
