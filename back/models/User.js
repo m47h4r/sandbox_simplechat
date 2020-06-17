@@ -33,7 +33,7 @@ let UserSchema = new mongoose.Schema(
 			required: [true, "can't be blank"],
 		},
 		sessionSecret: {
-			type: String
+			type: String,
 		},
 		lastAccessed: Date,
 		contacts: [{ type: Schema.Types.ObjectId, ref: "User" }],
@@ -74,13 +74,31 @@ UserSchema.methods.verifyPassword = async function (claimedPassword) {
 UserSchema.methods.createSession = async function () {
 	try {
 		const sessionSecret = generateStringID(config.general.stringIDLength);
-		console.log(sessionSecret)
 		this.sessionSecret = sessionSecret;
 		await this.save();
 		return { status: true, sessionSecret: sessionSecret };
 	} catch (e) {
 		debug(e);
 		return { status: false };
+	}
+};
+
+// TODO: write tests for this
+UserSchema.statics.destroySession = async function (sessionSecret) {
+	try {
+		const user = await mongoose
+			.model("User")
+			.findOne({ sessionSecret: sessionSecret });
+		if (!user) {
+			return false;
+		}
+		user.sessionSecret = null;
+		user.lastAccessed = new Date();
+		await user.save();
+		return true;
+	} catch (e) {
+		debug(e);
+		return false;
 	}
 };
 
@@ -110,7 +128,7 @@ UserSchema.statics.checkSession = async function (claimedSession) {
 UserSchema.statics.updateSession = async function (claimedSession) {
 	try {
 		let user = await mongoose
-			.model('User')
+			.model("User")
 			.findOne({ sessionSecret: claimedSession });
 		if (!user) {
 			return false;

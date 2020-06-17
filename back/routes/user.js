@@ -73,19 +73,15 @@ router.post("/signin", async (request, response) => {
 	}
 });
 
-// TODO: must extract the session destroying functionality and move to model
 router.post("/signout", async (request, response) => {
 	try {
-		let user = await User.findOne({
-			sessionSecret: request.body.sessionSecret,
-		});
-		if (!user) {
-			return response.json({ result: false, error: "Session not found." });
+		const sessionSecret = request.body.sessionSecret;
+		const isSessionDestroyed = User.destroySession(sessionSecret);
+		if (isSessionDestroyed) {
+			response.json({ status: "success" });
+		} else {
+			response.json({ result: false, error: "Database error occured." });
 		}
-		user.sessionSecret = null;
-		user.lastAccessed = new Date();
-		await user.save();
-		return response.json({ status: "success" });
 	} catch (e) {
 		debug(e);
 		response.json({ result: false, error: "Database error occured." });
