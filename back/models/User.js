@@ -29,7 +29,7 @@ let UserSchema = new mongoose.Schema(
 		bio: String,
 		password: {
 			type: String,
-			required: [true, "can't be blank"]
+			required: [true, "can't be blank"],
 		},
 		sessionSecret: {
 			type: String,
@@ -52,7 +52,7 @@ async function generateHashedPassword(plainTextPassword) {
 }
 
 async function checkPlainTextOverHash(plainText, hash) {
-	return (await bcrypt.compare(plainText, hash));
+	return await bcrypt.compare(plainText, hash);
 }
 
 UserSchema.pre("save", async function (next) {
@@ -67,11 +67,32 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.verifyPassword = async function (claimedPassword) {
-	return (await checkPlainTextOverHash(claimedPassword, this.password));
+	return await checkPlainTextOverHash(claimedPassword, this.password);
+};
+
+UserSchema.statics.checkSession = async function (claimedSession) {
+	try {
+		if (!claimedSession) {
+			return false;
+		}
+		const user = await mongoose
+			.model("User")
+			.findOne({ sessionSecret: claimedSession });
+		if (!user) {
+			return false;
+		}
+		const expirationDate = new Date(
+			user.lastAccessed.getTime() + config.general.validSessionTime
+		);
+		return new Date().getTime() <= expirationDate.getTime();
+	} catch (e) {
+		debug(e);
+		return false;
+	}
 };
 
 module.exports = {
 	User: mongoose.model("User", UserSchema),
 	generateHashedPassword: generateHashedPassword,
-	checkPlainTextOverHash: checkPlainTextOverHash
+	checkPlainTextOverHash: checkPlainTextOverHash,
 };

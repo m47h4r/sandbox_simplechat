@@ -7,26 +7,8 @@ const config = require("../config/");
 
 router.get("/check", async (request, response) => {
 	const claimedSession = request.headers.claimedsession;
-	if (!claimedSession) {
-		return response.json({ result: false });
-	}
-	try {
-		let user = await User.findOne({
-			sessionSecret: claimedSession,
-		});
-		if (!user) {
-			return response.json({ result: false });
-		}
-		const expirationDate = new Date(
-			user.lastAccessed.getTime() + config.general.validSessionTime
-		);
-		return response.json({
-			result: new Date().getTime() <= expirationDate.getTime(),
-		});
-	} catch (e) {
-		debug(e);
-		response.json({ result: false });
-	}
+	const isSessionValid = await User.checkSession(claimedSession);
+	response.json({ result: isSessionValid });
 });
 
 router.post("/update", async (request, response) => {
