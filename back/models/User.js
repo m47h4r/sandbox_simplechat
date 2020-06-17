@@ -70,6 +70,7 @@ UserSchema.methods.verifyPassword = async function (claimedPassword) {
 	return await checkPlainTextOverHash(claimedPassword, this.password);
 };
 
+// TODO: must write tests for this
 UserSchema.statics.checkSession = async function (claimedSession) {
 	try {
 		if (!claimedSession) {
@@ -91,6 +92,7 @@ UserSchema.statics.checkSession = async function (claimedSession) {
 	}
 };
 
+// TODO: must write tests for this
 UserSchema.statics.updateSession = async function (claimedSession) {
 	try {
 		let user = await mongoose

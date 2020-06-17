@@ -6,6 +6,7 @@ const debug = require("debug")("back:server");
 const config = require("../config/");
 const generateStringID = require("../utils/stringIDGenerator");
 
+// TODO: must move to model to isolate the sessionSecret from controller
 const createNewUser = (credentials) => {
 	return new User({
 		name: credentials.name,
@@ -18,6 +19,7 @@ const createNewUser = (credentials) => {
 	});
 };
 
+// TODO: must move to model
 const createSessionAndUpdateDB = async (user) => {
 	try {
 		const sessionSecret = generateStringID(config.general.stringIDLength);
@@ -86,6 +88,7 @@ router.post("/signin", async (request, response) => {
 	}
 });
 
+// TODO: must extract the session destroying functionality and move to model
 router.post("/signout", async (request, response) => {
 	try {
 		let user = await User.findOne({
@@ -104,6 +107,7 @@ router.post("/signout", async (request, response) => {
 	}
 });
 
+// TODO: analyze to see if anything should be moved into model
 router.post("/contacts/add", async (request, response) => {
 	try {
 		let user = await User.findOne({
@@ -125,6 +129,7 @@ router.post("/contacts/add", async (request, response) => {
 	}
 });
 
+// TODO: analyze to see if anything should be moved into model
 router.get("/contacts", async (request, response) => {
 	const claimedSession = request.headers.claimedsession;
 	try {
