@@ -91,6 +91,23 @@ UserSchema.statics.checkSession = async function (claimedSession) {
 	}
 };
 
+UserSchema.statics.updateSession = async function (claimedSession) {
+	try {
+		let user = await mongoose
+			.model('User')
+			.findOne({ sessionSecret: claimedSession });
+		if (!user) {
+			return false;
+		}
+		user.lastAccessed = new Date();
+		await user.save();
+		return true;
+	} catch (e) {
+		debug(e);
+		return false;
+	}
+};
+
 module.exports = {
 	User: mongoose.model("User", UserSchema),
 	generateHashedPassword: generateHashedPassword,
