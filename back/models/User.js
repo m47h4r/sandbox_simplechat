@@ -33,8 +33,7 @@ let UserSchema = new mongoose.Schema(
 			required: [true, "can't be blank"],
 		},
 		sessionSecret: {
-			type: String,
-			required: [true, "can't be blank"],
+			type: String
 		},
 		lastAccessed: Date,
 		contacts: [{ type: Schema.Types.ObjectId, ref: "User" }],

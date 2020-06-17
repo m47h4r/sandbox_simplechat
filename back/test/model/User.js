@@ -35,13 +35,6 @@ describe("model:User", function () {
 				done();
 			});
 		});
-		it("should be invalid if 'sessionSecret' is empty", function(done) {
-			const user = new User({ sessionSecret: ""});
-			user.validate(["sessionSecret"], function(err) {
-				expect(err.errors.sessionSecret).to.exist;
-				done();
-			});
-		});
 	});
 
 	describe("Hashing", function () {
