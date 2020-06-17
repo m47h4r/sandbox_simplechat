@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
 const config = require("../config/");
 const debug = require("debug")("back:server");
+const generateStringID = require("../utils/stringIDGenerator");
 
 const SALT_WORK_FACTOR = config.passwd.bcrypt_salt_work_factor;
 
@@ -68,6 +69,20 @@ UserSchema.pre("save", async function (next) {
 
 UserSchema.methods.verifyPassword = async function (claimedPassword) {
 	return await checkPlainTextOverHash(claimedPassword, this.password);
+};
+
+// TODO: write tests for this
+UserSchema.methods.createSession = async function () {
+	try {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+		console.log(sessionSecret)
+		this.sessionSecret = sessionSecret;
+		await this.save();
+		return { status: true, sessionSecret: sessionSecret };
+	} catch (e) {
+		debug(e);
+		return { status: false };
+	}
 };
 
 // TODO: must write tests for this

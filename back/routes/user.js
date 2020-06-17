@@ -6,7 +6,6 @@ const debug = require("debug")("back:server");
 const config = require("../config/");
 const generateStringID = require("../utils/stringIDGenerator");
 
-// TODO: must move to model to isolate the sessionSecret from controller
 const createNewUser = (credentials) => {
 	return new User({
 		name: credentials.name,
@@ -17,20 +16,6 @@ const createNewUser = (credentials) => {
 		sessionSecret: generateStringID(config.general.stringIDLength),
 		lastAccessed: new Date(),
 	});
-};
-
-// TODO: must move to model
-const createSessionAndUpdateDB = async (user) => {
-	try {
-		const sessionSecret = generateStringID(config.general.stringIDLength);
-		user.sessionSecret = sessionSecret;
-		user.lastAccessed = new Date();
-		await user.save();
-		return { status: true, sessionSecret: sessionSecret };
-	} catch (e) {
-		debug(e);
-		return { status: false };
-	}
 };
 
 router.post("/signup", async (request, response) => {
@@ -67,7 +52,7 @@ router.post("/signin", async (request, response) => {
 		if (!isPasswordVerified) {
 			return response.json({ status: "failure", error: "Wrong credentials." });
 		}
-		const sessionCreationResult = await createSessionAndUpdateDB(user);
+		const sessionCreationResult = await user.createSession();
 		if (!sessionCreationResult.status) {
 			return response.json({
 				status: "failure",
