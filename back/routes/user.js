@@ -6,25 +6,15 @@ const debug = require("debug")("back:server");
 const config = require("../config/");
 const generateStringID = require("../utils/stringIDGenerator");
 
-const createNewUser = (credentials) => {
-	return new User({
-		name: credentials.name,
-		surname: credentials.surname,
-		email: credentials.email,
-		bio: credentials.bio,
-		password: credentials.password,
-		sessionSecret: generateStringID(config.general.stringIDLength),
-		lastAccessed: new Date(),
-	});
-};
-
 router.post("/signup", async (request, response) => {
-	let newUser = createNewUser({
+	const newUser = new User({
 		name: request.body.name,
 		surname: request.body.surname,
 		email: request.body.email,
 		bio: request.body.bio,
 		password: request.body.password,
+		sessionSecret: generateStringID(config.general.stringIDLength),
+		lastAccessed: new Date(),
 	});
 	try {
 		await newUser.save();
@@ -95,21 +85,10 @@ router.post("/contacts/add", async (request, response) => {
 	response.json(result);
 });
 
-// TODO: analyze to see if anything should be moved into model
 router.get("/contacts", async (request, response) => {
 	const claimedSession = request.headers.claimedsession;
-	try {
-		let user = await User.findOne({ sessionSecret: claimedSession })
-			.populate("contacts", "name surname")
-			.exec();
-		if (!user) {
-			return response.json({ result: false, error: "Invalid session." });
-		}
-		response.json({ result: true, contactList: user.contacts });
-	} catch (e) {
-		debug(e);
-		response.json({ result: false, error: "Database error occured." });
-	}
+	const result = await User.getContacts(claimedSession);
+	response.json(result);
 });
 
 module.exports = router;

@@ -146,13 +146,13 @@ UserSchema.statics.updateSession = async function (claimedSession) {
 UserSchema.statics.addContact = async function (userSession, contactEmail) {
 	try {
 		const user = await mongoose.model("User").findOne({
-			sessionSecret: userSession
+			sessionSecret: userSession,
 		});
 		if (!user) {
 			return { result: false, error: "Invalid session." };
 		}
 		const contact = await mongoose.model("User").findOne({
-			email: contactEmail
+			email: contactEmail,
 		});
 		user.contacts.push(contact._id);
 		await user.save();
@@ -160,6 +160,24 @@ UserSchema.statics.addContact = async function (userSession, contactEmail) {
 	} catch (e) {
 		debug(e);
 		return { result: false, error: "An error occured." };
+	}
+};
+
+// TODO: write tests for this
+UserSchema.statics.getContacts = async function (userSession) {
+	try {
+		const user = await mongoose
+			.model("User")
+			.findOne({ sessionSecret: userSession })
+			.populate("contacts", "name surname")
+			.exec();
+		if (!user) {
+			return { result: false, error: "Invalid session." };
+		}
+		return { result: true, contactList: user.contacts };
+	} catch (e) {
+		debug(e);
+		return { result: false, error: "Database error occured." };
 	}
 };
 
