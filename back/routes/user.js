@@ -88,26 +88,11 @@ router.post("/signout", async (request, response) => {
 	}
 });
 
-// TODO: analyze to see if anything should be moved into model
 router.post("/contacts/add", async (request, response) => {
-	try {
-		let user = await User.findOne({
-			sessionSecret: request.body.claimedSessionSecret,
-		});
-		if (!user) {
-			return response.json({ result: false, error: "An error occured." });
-		}
-		let contact = await User.findOne({ email: request.body.email });
-		if (!contact) {
-			return response.json({ result: false, error: "User not found." });
-		}
-		user.contacts.push(contact._id);
-		await user.save();
-		return response.json({ result: true });
-	} catch (e) {
-		debug(e);
-		response.json({ result: false, error: "An error occured." });
-	}
+	const userSession = request.body.claimedSessionSecret;
+	const contactEmail = request.body.email; // TODO: must be changed to contactEmail
+	const result = await User.addContact(userSession, contactEmail);
+	response.json(result);
 });
 
 // TODO: analyze to see if anything should be moved into model

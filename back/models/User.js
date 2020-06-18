@@ -142,6 +142,27 @@ UserSchema.statics.updateSession = async function (claimedSession) {
 	}
 };
 
+// TODO: write tests for this
+UserSchema.statics.addContact = async function (userSession, contactEmail) {
+	try {
+		const user = await mongoose.model("User").findOne({
+			sessionSecret: userSession
+		});
+		if (!user) {
+			return { result: false, error: "Invalid session." };
+		}
+		const contact = await mongoose.model("User").findOne({
+			email: contactEmail
+		});
+		user.contacts.push(contact._id);
+		await user.save();
+		return { result: true };
+	} catch (e) {
+		debug(e);
+		return { result: false, error: "An error occured." };
+	}
+};
+
 module.exports = {
 	User: mongoose.model("User", UserSchema),
 	generateHashedPassword: generateHashedPassword,
