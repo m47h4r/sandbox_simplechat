@@ -2,10 +2,12 @@ const expect = require("chai").expect;
 const sinon = require("sinon");
 const mongoose = require("mongoose");
 const debug = require("debug")("back:server");
+const config = require("../../config/");
 const { User } = require("../../models/User");
 const { generateHashedPassword } = require("../../models/User");
 const { checkPlainTextOverHash } = require("../../models/User");
 const expectedIDLength = require("../../config/").general.stringIDLength;
+const generateStringID = require("../../utils/stringIDGenerator");
 
 describe("model:User", function () {
 	describe("Emptiness", function () {
@@ -49,11 +51,36 @@ describe("model:User", function () {
 
 	describe("method:createSession", function () {
 		it(`should return true status and sessionSecret of length ${expectedIDLength}`, async function() {
-			sinon.stub(User.prototype, 'save');
+			const stub = sinon.stub(User.prototype, 'save');
 			let user = new User();
 			const result = await user.createSession();
+			stub.restore();
 			expect(result.status).to.be.true;
 			expect(result.sessionSecret.length).to.equal(expectedIDLength);
+		});
+	});
+
+	describe("method:destroySession", function() {
+		it("should be called with a sessionSecret", async function() {
+			const stub_save = sinon.stub(User.prototype, 'save');
+			const stub_findOne = sinon.stub(User, 'findOne');
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			await User.destroySession(sessionSecret);
+			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+			stub_save.restore();
+			stub_findOne.restore();
+		});
+		it("should return true", async function() {
+			const stub_save = sinon.stub(User.prototype, 'save');
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const stub_findOne = sinon.stub(User, 'findOne').returns(new User({
+				sessionSecret: sessionSecret,
+				lastAccessed: new Date()
+			}));
+			const result = await User.destroySession(sessionSecret);
+			expect(result).to.be.true;
+			stub_save.restore();
+			stub_findOne.restore();
 		});
 	});
 });
