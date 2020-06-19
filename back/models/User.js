@@ -70,7 +70,6 @@ UserSchema.methods.verifyPassword = async function (claimedPassword) {
 	return await checkPlainTextOverHash(claimedPassword, this.password);
 };
 
-// TODO: write tests for this
 UserSchema.methods.createSession = async function () {
 	try {
 		const sessionSecret = generateStringID(config.general.stringIDLength);
