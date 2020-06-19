@@ -82,7 +82,6 @@ UserSchema.methods.createSession = async function () {
 	}
 };
 
-// TODO: write tests for this
 UserSchema.statics.destroySession = async function (sessionSecret) {
 	try {
 		const user = await mongoose
@@ -101,7 +100,6 @@ UserSchema.statics.destroySession = async function (sessionSecret) {
 	}
 };
 
-// TODO: must write tests for this
 UserSchema.statics.checkSession = async function (claimedSession) {
 	try {
 		if (!claimedSession) {

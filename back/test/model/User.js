@@ -83,4 +83,48 @@ describe("model:User", function () {
 			stub_findOne.restore();
 		});
 	});
+
+	describe("method:checkSession", function() {
+		it("should return false if no session is provided", async function() {
+			const stub_findOne = sinon.stub(User, 'findOne');
+			const result = await User.checkSession(null);
+			expect(result).to.be.false;
+			stub_findOne.restore();
+		});
+		it("should return false if no user is found", async function() {
+			const stub_findOne = sinon.stub(User, 'findOne').returns(null);
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const result = await User.checkSession(sessionSecret);
+			expect(result).to.be.false;
+			stub_findOne.restore();
+		});
+		it("should be called with a sessionSecret", async function() {
+			const stub_findOne = sinon.stub(User, 'findOne');
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			await User.checkSession(sessionSecret);
+			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+			stub_findOne.restore();
+		});
+		it("should return false if lastAccessed is greater than expiration date", async function() {
+			const stub_findOne = sinon.stub(User, 'findOne').returns(new User({
+				// this makes sure the expiration date will always be at least
+				// one millisecond (if bot `new Date()`s are executed at the same time)
+				// less than the current date date
+				lastAccessed: new Date().getTime() - config.general.validSessionTime - 1
+			}));
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const result = await User.checkSession(sessionSecret);
+			expect(result).to.be.false;
+			stub_findOne.restore();
+		});
+		it("should return true if lastAccessed is less than expiration date", async function() {
+			const stub_findOne = sinon.stub(User, 'findOne').returns(new User({
+				lastAccessed: new Date().getTime()
+			}));
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const result = await User.checkSession(sessionSecret);
+			expect(result).to.be.true;
+			stub_findOne.restore();
+		});
+	});
 });
