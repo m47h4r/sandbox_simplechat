@@ -138,7 +138,6 @@ UserSchema.statics.updateSession = async function (claimedSession) {
 	}
 };
 
-// TODO: write tests for this
 UserSchema.statics.addContact = async function (userSession, contactEmail) {
 	try {
 		const user = await mongoose.model("User").findOne({
@@ -150,6 +149,9 @@ UserSchema.statics.addContact = async function (userSession, contactEmail) {
 		const contact = await mongoose.model("User").findOne({
 			email: contactEmail,
 		});
+		if (!contact) {
+			return { result: false, error: "Invalid contact." };
+		}
 		user.contacts.push(contact._id);
 		await user.save();
 		return { result: true };
