@@ -121,7 +121,6 @@ UserSchema.statics.checkSession = async function (claimedSession) {
 	}
 };
 
-// TODO: must write tests for this
 UserSchema.statics.updateSession = async function (claimedSession) {
 	try {
 		let user = await mongoose

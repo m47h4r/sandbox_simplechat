@@ -127,4 +127,36 @@ describe("model:User", function () {
 			stub_findOne.restore();
 		});
 	});
+
+	describe("method:updateSession", function() {
+		it("should be called with a sessionSecret", async function() {
+			const stub_save = sinon.stub(User.prototype, 'save');
+			const stub_findOne = sinon.stub(User, "findOne");
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			await User.updateSession(sessionSecret);
+			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+			stub_save.restore();
+			stub_findOne.restore();
+		});
+		it("should return false if no user is found", async function() {
+			const stub_save = sinon.stub(User.prototype, 'save');
+			const stub_findOne = sinon.stub(User, "findOne").returns(null);
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const result = await User.updateSession(sessionSecret);
+			expect(result).to.be.false;
+			stub_save.restore();
+			stub_findOne.restore();
+		});
+		it("should return true if user is found", async function() {
+			const stub_save = sinon.stub(User.prototype, 'save');
+			const stub_findOne = sinon.stub(User, "findOne").returns(new User({
+				lastAccessed: new Date()
+			}));
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const result = await User.updateSession(sessionSecret);
+			expect(result).to.be.true;
+			stub_save.restore();
+			stub_findOne.restore();
+		});
+	});
 });
