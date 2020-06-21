@@ -1,7 +1,5 @@
 const expect = require("chai").expect;
 const sinon = require("sinon");
-const mongoose = require("mongoose");
-const debug = require("debug")("back:server");
 const config = require("../../config/");
 const { User } = require("../../models/User");
 const { generateHashedPassword } = require("../../models/User");
@@ -142,6 +140,15 @@ describe("model:User", function () {
 			const sessionSecret = generateStringID(config.general.stringIDLength);
 			await User.updateSession(sessionSecret);
 			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+			stub_save.restore();
+			stub_findOne.restore();
+		});
+		it("should return false if sessionSecret is falsy", async function () {
+			const stub_save = sinon.stub(User.prototype, "save");
+			const stub_findOne = sinon.stub(User, "findOne");
+			const sessionSecret = null;
+			const result = await User.updateSession(sessionSecret);
+			expect(result).to.be.false;
 			stub_save.restore();
 			stub_findOne.restore();
 		});

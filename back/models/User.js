@@ -123,6 +123,9 @@ UserSchema.statics.checkSession = async function (claimedSession) {
 
 UserSchema.statics.updateSession = async function (claimedSession) {
 	try {
+		if (!claimedSession) {
+			return false;
+		}
 		let user = await mongoose
 			.model("User")
 			.findOne({ sessionSecret: claimedSession });
