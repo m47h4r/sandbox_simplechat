@@ -16,6 +16,7 @@ describe("model:User", function () {
 				done();
 			});
 		});
+
 		it("should be invalid if 'surname' is empty", function (done) {
 			const user = new User({ surname: "" });
 			user.validate(["surname"], function (err) {
@@ -23,6 +24,7 @@ describe("model:User", function () {
 				done();
 			});
 		});
+
 		it("should be invalid if 'email' is empty", function (done) {
 			const user = new User({ email: "" });
 			user.validate(["email"], function (err) {
@@ -30,6 +32,7 @@ describe("model:User", function () {
 				done();
 			});
 		});
+
 		it("should be invalid if 'password' is empty", function (done) {
 			const user = new User({ password: "" });
 			user.validate(["password"], function (err) {
@@ -48,65 +51,87 @@ describe("model:User", function () {
 	});
 
 	describe("method:createSession", function () {
+		beforeEach(function () {
+			sinon.stub(User.prototype, "save");
+		});
+
+		afterEach(function () {
+			User.prototype.save.restore();
+		});
+
 		it(`should return true status and sessionSecret of length ${expectedIDLength}`, async function () {
-			const stub = sinon.stub(User.prototype, "save");
 			let user = new User();
 			const result = await user.createSession();
-			stub.restore();
 			expect(result.status).to.be.true;
 			expect(result.sessionSecret.length).to.equal(expectedIDLength);
+		});
+
+		it("should return false status when User throws error", async function () {
+			User.prototype.save.throws({});
+			let user = new User();
+			const result = await user.createSession();
+			expect(result.status).to.be.false;
 		});
 	});
 
 	describe("method:destroySession", function () {
-		it("should be called with a sessionSecret", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			await User.destroySession(sessionSecret);
-			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
-			stub_save.restore();
-			stub_findOne.restore();
-		});
-		it("should return true", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			const stub_findOne = sinon.stub(User, "findOne").returns(
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+
+		beforeEach(function () {
+			sinon.stub(User.prototype, "save");
+			sinon.stub(User, "findOne").returns(
 				new User({
 					sessionSecret: sessionSecret,
 					lastAccessed: new Date(),
 				})
 			);
+		});
+
+		afterEach(function () {
+			User.prototype.save.restore();
+			User.findOne.restore();
+		});
+
+		it("should be called with a sessionSecret", async function () {
+			await User.destroySession(sessionSecret);
+			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+		});
+
+		it("should return true", async function () {
 			const result = await User.destroySession(sessionSecret);
 			expect(result).to.be.true;
-			stub_save.restore();
-			stub_findOne.restore();
 		});
 	});
 
 	describe("method:checkSession", function () {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+
+		beforeEach(function () {
+			sinon.stub(User, "findOne");
+		});
+
+		afterEach(function () {
+			User.findOne.restore();
+		});
+
 		it("should return false if no session is provided", async function () {
-			const stub_findOne = sinon.stub(User, "findOne");
 			const result = await User.checkSession(null);
 			expect(result).to.be.false;
-			stub_findOne.restore();
 		});
+
 		it("should return false if no user is found", async function () {
-			const stub_findOne = sinon.stub(User, "findOne").returns(null);
-			const sessionSecret = generateStringID(config.general.stringIDLength);
+			User.findOne.returns(null);
 			const result = await User.checkSession(sessionSecret);
 			expect(result).to.be.false;
-			stub_findOne.restore();
 		});
+
 		it("should be called with a sessionSecret", async function () {
-			const stub_findOne = sinon.stub(User, "findOne");
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			await User.checkSession(sessionSecret);
 			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
-			stub_findOne.restore();
 		});
+
 		it("should return false if lastAccessed is greater than expiration date", async function () {
-			const stub_findOne = sinon.stub(User, "findOne").returns(
+			User.findOne.returns(
 				new User({
 					// this makes sure the expiration date will always be at least
 					// one millisecond (if bot `new Date()`s are executed at the same time)
@@ -115,13 +140,12 @@ describe("model:User", function () {
 						new Date().getTime() - config.general.validSessionTime - 1,
 				})
 			);
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const result = await User.checkSession(sessionSecret);
 			expect(result).to.be.false;
-			stub_findOne.restore();
 		});
+
 		it("should return true if lastAccessed is less than expiration date", async function () {
-			const stub_findOne = sinon.stub(User, "findOne").returns(
+			User.findOne.returns(
 				new User({
 					lastAccessed: new Date().getTime(),
 				})
@@ -129,65 +153,71 @@ describe("model:User", function () {
 			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const result = await User.checkSession(sessionSecret);
 			expect(result).to.be.true;
-			stub_findOne.restore();
 		});
 	});
 
 	describe("method:updateSession", function () {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+
+		beforeEach(function () {
+			sinon.stub(User.prototype, "save");
+			sinon.stub(User, "findOne");
+		});
+
+		afterEach(function () {
+			User.prototype.save.restore();
+			User.findOne.restore();
+		});
+
 		it("should be called with a sessionSecret", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			await User.updateSession(sessionSecret);
 			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
-			stub_save.restore();
-			stub_findOne.restore();
 		});
+
 		it("should return false if sessionSecret is falsy", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
 			const sessionSecret = null;
 			const result = await User.updateSession(sessionSecret);
 			expect(result).to.be.false;
-			stub_save.restore();
-			stub_findOne.restore();
 		});
+
 		it("should return false if no user is found", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne").returns(null);
-			const sessionSecret = generateStringID(config.general.stringIDLength);
+			User.findOne.returns(null);
 			const result = await User.updateSession(sessionSecret);
 			expect(result).to.be.false;
-			stub_save.restore();
-			stub_findOne.restore();
 		});
+
 		it("should return true if user is found", async function () {
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne").returns(
+			User.findOne.returns(
 				new User({
 					lastAccessed: new Date(),
 				})
 			);
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const result = await User.updateSession(sessionSecret);
 			expect(result).to.be.true;
-			stub_save.restore();
-			stub_findOne.restore();
 		});
 	});
 
 	describe("method:addContact", function () {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+
+		beforeEach(function () {
+			sinon.stub(User.prototype, "save");
+			sinon.stub(User, "findOne");
+		});
+
+		afterEach(function () {
+			User.prototype.save.restore();
+			User.findOne.restore();
+		});
+
 		it("should return false and the correct error if no user is found", async function () {
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const email = "example@mail.com";
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
-			stub_findOne
+			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
 				})
 				.returns(null);
-			stub_findOne
+			User.findOne
 				.withArgs({
 					email: email,
 				})
@@ -195,20 +225,16 @@ describe("model:User", function () {
 			const result = await User.addContact(sessionSecret, email);
 			expect(result.result).to.be.false;
 			expect(result.error).to.equal("Invalid session.");
-			stub_findOne.restore();
-			stub_save.restore();
 		});
+
 		it("should return false and the correct error if no contact is found", async function () {
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const email = "example@mail.com";
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
-			stub_findOne
+			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
 				})
 				.returns(new User());
-			stub_findOne
+			User.findOne
 				.withArgs({
 					email: email,
 				})
@@ -216,39 +242,41 @@ describe("model:User", function () {
 			const result = await User.addContact(sessionSecret, email);
 			expect(result.result).to.be.false;
 			expect(result.error).to.equal("Invalid contact.");
-			stub_findOne.restore();
-			stub_save.restore();
 		});
+
 		it("should return true if no problem occurs", async function () {
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const email = "example@mail.com";
-			const stub_save = sinon.stub(User.prototype, "save");
-			const stub_findOne = sinon.stub(User, "findOne");
-			stub_findOne
+			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
 				})
 				.returns(new User());
-			stub_findOne
+			User.findOne
 				.withArgs({
 					email: email,
 				})
 				.returns(new User({ contacts: [] }));
 			const result = await User.addContact(sessionSecret, email);
 			expect(result.result).to.be.true;
-			stub_findOne.restore();
-			stub_save.restore();
 		});
 	});
 
 	describe("method:getContacts", function () {
+		const sessionSecret = generateStringID(config.general.stringIDLength);
+
+		beforeEach(function () {
+			sinon.stub(User, "findOne");
+		});
+
+		afterEach(function () {
+			User.findOne.restore();
+		});
+
 		it("should be called with a sessionSecret", async function () {
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			const stub_findOne = sinon.stub(User, "findOne");
 			await User.getContacts(sessionSecret);
 			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
-			stub_findOne.restore();
 		});
+
 		it("should return false and the correct error if no user is found", async function () {
 			const mockFindOne = {
 				populate: function () {
@@ -258,13 +286,12 @@ describe("model:User", function () {
 					return null;
 				},
 			};
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			const stub_findOne = sinon.stub(User, "findOne").returns(mockFindOne);
+			User.findOne.returns(mockFindOne);
 			const result = await User.getContacts(sessionSecret);
 			expect(result.result).to.be.false;
 			expect(result.error).to.equal("Invalid session.");
-			stub_findOne.restore();
 		});
+
 		it("should return true and contactList if all is well", async function () {
 			const mockFindOne = {
 				populate: function () {
@@ -272,16 +299,14 @@ describe("model:User", function () {
 				},
 				exec: function () {
 					return {
-						contacts: []
+						contacts: [],
 					};
 				},
 			};
-			const sessionSecret = generateStringID(config.general.stringIDLength);
-			const stub_findOne = sinon.stub(User, "findOne").returns(mockFindOne);
+			User.findOne.returns(mockFindOne);
 			const result = await User.getContacts(sessionSecret);
 			expect(result.result).to.be.true;
 			expect(result.contactList).to.be.an("array");
-			stub_findOne.restore();
 		});
 	});
 });
