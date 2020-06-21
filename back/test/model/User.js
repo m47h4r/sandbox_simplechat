@@ -101,6 +101,18 @@ describe("model:User", function () {
 			const result = await User.destroySession(sessionSecret);
 			expect(result).to.be.true;
 		});
+
+		it("should return false if User.findOne throws exception", async function () {
+			User.findOne.throws({});
+			const result = await User.destroySession(sessionSecret);
+			expect(result).to.be.false;
+		});
+
+		it("should return false if User.prototype.save throws exception", async function () {
+			User.prototype.save.throws({});
+			const result = await User.destroySession(sessionSecret);
+			expect(result).to.be.false;
+		});
 	});
 
 	describe("method:checkSession", function () {
@@ -150,9 +162,14 @@ describe("model:User", function () {
 					lastAccessed: new Date().getTime(),
 				})
 			);
-			const sessionSecret = generateStringID(config.general.stringIDLength);
 			const result = await User.checkSession(sessionSecret);
 			expect(result).to.be.true;
+		});
+
+		it("should return false if User.findOne throws exception", async function () {
+			User.findOne.throws({});
+			const result = await User.checkSession(sessionSecret);
+			expect(result).to.be.false;
 		});
 	});
 
@@ -195,10 +212,23 @@ describe("model:User", function () {
 			const result = await User.updateSession(sessionSecret);
 			expect(result).to.be.true;
 		});
+
+		it("should return false if User.findOne throws exception", async function () {
+			User.findOne.throws({});
+			const result = await User.updateSession(sessionSecret);
+			expect(result).to.be.false;
+		});
+
+		it("should return false if User.prototype.save throws exception", async function () {
+			User.prototype.save.throws({});
+			const result = await User.updateSession(sessionSecret);
+			expect(result).to.be.false;
+		});
 	});
 
 	describe("method:addContact", function () {
 		const sessionSecret = generateStringID(config.general.stringIDLength);
+		const email = "example@mail.com";
 
 		beforeEach(function () {
 			sinon.stub(User.prototype, "save");
@@ -211,7 +241,6 @@ describe("model:User", function () {
 		});
 
 		it("should return false and the correct error if no user is found", async function () {
-			const email = "example@mail.com";
 			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
@@ -228,7 +257,6 @@ describe("model:User", function () {
 		});
 
 		it("should return false and the correct error if no contact is found", async function () {
-			const email = "example@mail.com";
 			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
@@ -245,7 +273,6 @@ describe("model:User", function () {
 		});
 
 		it("should return true if no problem occurs", async function () {
-			const email = "example@mail.com";
 			User.findOne
 				.withArgs({
 					sessionSecret: sessionSecret,
@@ -258,6 +285,55 @@ describe("model:User", function () {
 				.returns(new User({ contacts: [] }));
 			const result = await User.addContact(sessionSecret, email);
 			expect(result.result).to.be.true;
+		});
+
+		it("should return false and the correct error if User.findOne(user) throws exception", async function () {
+			User.findOne
+				.withArgs({
+					sessionSecret: sessionSecret,
+				})
+				.throws({});
+			User.findOne
+				.withArgs({
+					email: email,
+				})
+				.returns(new User({ contacts: [] }));
+			const result = await User.addContact(sessionSecret, email);
+			expect(result.result).to.be.false;
+			expect(result.error).to.equal("An error occured.");
+		});
+
+		it("should return false and the correct error if User.findOne(contact) throws exception", async function () {
+			User.findOne
+				.withArgs({
+					sessionSecret: sessionSecret,
+				})
+				.returns(new User());
+			User.findOne
+				.withArgs({
+					email: email,
+				})
+				.throws({});
+			const result = await User.addContact(sessionSecret, email);
+			expect(result.result).to.be.false;
+			expect(result.error).to.equal("An error occured.");
+		});
+
+		it("should return false and the correct error if User.prototype.save() throws exception", async function () {
+			User.findOne
+				.withArgs({
+					sessionSecret: sessionSecret,
+				})
+				.returns(new User());
+			User.findOne
+				.withArgs({
+					email: email,
+				})
+				.returns(new User({ contacts: [] }));
+			User.prototype.save.throws({});
+			const result = await User.addContact(sessionSecret, email);
+			expect(result.result).to.be.false;
+			expect(result.error).to.equal("An error occured.");
 		});
 	});
 
@@ -307,6 +383,13 @@ describe("model:User", function () {
 			const result = await User.getContacts(sessionSecret);
 			expect(result.result).to.be.true;
 			expect(result.contactList).to.be.an("array");
+		});
+
+		it("should return false and the correct error if User.findOne() throws exception", async function () {
+			User.findOne.throws({});
+			const result = await User.getContacts(sessionSecret);
+			expect(result.result).to.be.false;
+			expect(result.error).to.equal("Database error occured.");
 		});
 	});
 });
