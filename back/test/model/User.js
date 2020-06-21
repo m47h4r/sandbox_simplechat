@@ -233,4 +233,48 @@ describe("model:User", function () {
 			stub_save.restore();
 		});
 	});
+
+	describe("method:getContacts", function () {
+		it("should be called with a sessionSecret", async function () {
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const stub_findOne = sinon.stub(User, "findOne");
+			await User.getContacts(sessionSecret);
+			sinon.assert.calledWith(User.findOne, { sessionSecret: sessionSecret });
+			stub_findOne.restore();
+		});
+		it("should return false and the correct error if no user is found", async function () {
+			const mockFindOne = {
+				populate: function () {
+					return this;
+				},
+				exec: function () {
+					return null;
+				},
+			};
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const stub_findOne = sinon.stub(User, "findOne").returns(mockFindOne);
+			const result = await User.getContacts(sessionSecret);
+			expect(result.result).to.be.false;
+			expect(result.error).to.equal("Invalid session.");
+			stub_findOne.restore();
+		});
+		it("should return true and contactList if all is well", async function () {
+			const mockFindOne = {
+				populate: function () {
+					return this;
+				},
+				exec: function () {
+					return {
+						contacts: []
+					};
+				},
+			};
+			const sessionSecret = generateStringID(config.general.stringIDLength);
+			const stub_findOne = sinon.stub(User, "findOne").returns(mockFindOne);
+			const result = await User.getContacts(sessionSecret);
+			expect(result.result).to.be.true;
+			expect(result.contactList).to.be.an("array");
+			stub_findOne.restore();
+		});
+	});
 });

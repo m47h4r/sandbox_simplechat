@@ -161,7 +161,6 @@ UserSchema.statics.addContact = async function (userSession, contactEmail) {
 	}
 };
 
-// TODO: write tests for this
 UserSchema.statics.getContacts = async function (userSession) {
 	try {
 		const user = await mongoose
