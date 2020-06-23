@@ -1,12 +1,10 @@
 const supertest = require("supertest");
 const express = require("express");
 
-const userRouter = require("../../routes/user");
 const sessionRouter = require("../../routes/session");
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
-app.use("/user", userRouter);
 app.use("/session", sessionRouter);
 
 describe("route:session", function () {
