@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
-const debug = require("debug")("back:server");
 
 const getUser = async (sessionId) => {
   try {
@@ -123,7 +122,6 @@ module.exports = {
   message,
   getUser,
   getMessages,
-  getChatMessages,
   generateMessageList,
   generateMessage,
   saveMessage,
