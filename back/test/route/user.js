@@ -302,7 +302,7 @@ describe("route:user", function () {
         .expect(200)
         .end(function (err, response) {
           if (err) return done(err);
-          expect(response.body.status).to.equal("success");
+          expect(response.body.result).to.equal("success");
           done();
         });
     });

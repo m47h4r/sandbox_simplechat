@@ -20,7 +20,7 @@ function Header(props) {
 	const signOutHandler = async () => {
 		let fields = { sessionSecret: props.sessionCookie };
 		let signOutResult = await makeSignOutRequest(fields);
-		if (signOutResult.data.status === "success") {
+		if (signOutResult.data.result === "success") {
 			props.setMessageType("success");
 			props.setMessage("Successfully signed out!");
 		} else {

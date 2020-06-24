@@ -68,7 +68,7 @@ router.post("/signout", async (request, response) => {
 		const sessionSecret = request.body.sessionSecret;
 		const isSessionDestroyed = User.destroySession(sessionSecret);
 		if (isSessionDestroyed) {
-			response.json({ status: "success" });
+			response.json({ result: "success" });
 		} else {
 			response.json({ result: false, error: "Database error occured." });
 		}
