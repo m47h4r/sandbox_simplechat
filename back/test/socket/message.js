@@ -10,6 +10,7 @@ const {
   generateMessageList,
   generateMessage,
   saveMessage,
+  getChatMessages,
 } = require("../../socket/message");
 
 describe("socket:message", function () {
@@ -150,5 +151,27 @@ describe("socket:message", function () {
     });
   });
 
-  
+  describe("function:generateMessage", function () {
+    const message = {
+      _id: 0,
+      createdAt: new Date(),
+      from: { _id: 0, name: "Sender", surname: "Senderi" },
+      to: { _id: 1, name: "Receiver", surname: "Receiveri" },
+      text: "Some text",
+    };
+
+    const responseMessage = {
+      _id: message._id,
+      date: message.createdAt,
+      from: message.from.name + " " + message.from.surname,
+      from_id: message.from._id,
+      to: message.to.name + " " + message.to.surname,
+      text: message.text,
+    };
+
+    it("should return a specefic type of object", function () {
+      const result = generateMessage(message);
+      expect(result).to.deep.equal(responseMessage);
+    });
+  });
 });

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
+const debug = require("debug")("back:server");
 
 const getUser = async (sessionId) => {
   try {
@@ -31,6 +32,21 @@ const getMessages = async (userId, contactId) => {
     return messages;
   } catch (e) {
     return false;
+  }
+};
+
+const getChatMessages = async function (data, cb) {
+  try {
+    const user = await getUser(data.session_id);
+    if (!user) {
+      return cb({ result: false, error: "Session not valid" });
+    }
+    const messages = await getMessages(user._id, data.contact_id);
+    const generatedMessageList = generateMessageList(messages, user._id);
+    cb({ result: true, data: generatedMessageList });
+  } catch(e) {
+    debug(e);
+    cb({ result: false });
   }
 };
 
@@ -71,15 +87,11 @@ const saveMessage = async (userId, contactId, text) => {
       text: text,
     });
     let saved_message = await message.save();
-    try {
-      let msg = await Message.findOne({ _id: saved_message._id })
-        .populate("from", "name surname")
-        .populate("to", "name surname")
-        .exec();
-      return { result: true, message: msg };
-    } catch (e) {
-      return { result: false };
-    }
+    let msg = await Message.findOne({ _id: saved_message._id })
+      .populate("from", "name surname")
+      .populate("to", "name surname")
+      .exec();
+    return { result: true, message: msg };
   } catch (e) {
     return { result: false };
   }
@@ -87,16 +99,7 @@ const saveMessage = async (userId, contactId, text) => {
 
 function message(io) {
   io.on("connection", (socket) => {
-    socket.on("get-chat-messages", async (data, cb) => {
-      const user = await getUser(data.session_id);
-      if (!user) {
-        return cb({ result: false, error: "Session not valid" });
-      }
-      const messages = await getMessages(user._id, data.contact_id);
-      const generatedMessageList = generateMessageList(messages, user._id);
-      cb({ result: true, data: generatedMessageList });
-    });
-
+    socket.on("get-chat-messages", getChatMessages);
     socket.on("send-message", async (data, cb) => {
       const user = await getUser(data.session_id);
       if (!user) {
@@ -126,6 +129,7 @@ module.exports = {
   message,
   getUser,
   getMessages,
+  getChatMessages,
   generateMessageList,
   generateMessage,
   saveMessage,
