@@ -84,7 +84,7 @@ describe("socket:message", function () {
         },
         exec: function () {
           return null;
-        }
+        },
       };
       Message.find.returns(mockFind);
       const result = await getMessages();
@@ -98,11 +98,57 @@ describe("socket:message", function () {
         },
         exec: function () {
           return exampleMessage;
-        }
+        },
       };
       Message.find.returns(mockFind);
       const result = await getMessages();
       expect(result).to.equal(exampleMessage);
     });
   });
+
+  describe("function:generateMessageList", function () {
+    const senderID = 0;
+    const messages = [
+      {
+        _id: 0,
+        createdAt: new Date(),
+        from: { _id: 0, name: "Sender", surname: "Senderi" },
+        to: { _id: 1, name: "Receiver", surname: "Receiveri" },
+        text: "Some text",
+      },
+      {
+        _id: 1,
+        createdAt: new Date(),
+        from: { _id: 1, name: "Receiver", surname: "Receiveri" },
+        to: { _id: 0, name: "Sender", surname: "Senderi" },
+        text: "Some other text",
+      },
+    ];
+
+    const responseMessage = [
+      {
+        _id: messages[0]._id,
+        date: messages[0].createdAt,
+        from: messages[0].from.name + " " + messages[0].from.surname,
+        to: messages[0].to.name + " " + messages[0].to.surname,
+        isSender: messages[0].from._id.toString() === senderID.toString(),
+        text: messages[0].text,
+      },
+      {
+        _id: messages[1]._id,
+        date: messages[1].createdAt,
+        from: messages[1].from.name + " " + messages[1].from.surname,
+        to: messages[1].to.name + " " + messages[1].to.surname,
+        isSender: messages[1].from._id.toString() === senderID.toString(),
+        text: messages[1].text,
+      },
+    ];
+
+    it("should return an array containing a specefic type of objects", function () {
+      const result = generateMessageList(messages, senderID);
+      expect(result).to.deep.equal(responseMessage);
+    });
+  });
+
+  
 });

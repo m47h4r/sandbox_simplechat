@@ -51,8 +51,7 @@ const generateMessageList = (messages, userId) => {
   return dataToReturn;
 };
 
-const generateMessage = (message, userId) => {
-  console.log(message);
+const generateMessage = (message) => {
   let msg = {
     _id: message._id,
     date: message.createdAt,
@@ -108,7 +107,7 @@ function message(io) {
         return cb({ result: false, error: "Database error" });
       } else {
         cb({ result: true });
-        const message = generateMessage(res.message, user._id);
+        const message = generateMessage(res.message);
         io.emit("new-message", { message: message });
       }
     });
