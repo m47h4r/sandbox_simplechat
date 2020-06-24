@@ -111,4 +111,11 @@ function message(io) {
 	});
 }
 
-module.exports = message;
+module.exports = {
+	message,
+	getUser,
+	getMessages,
+	generateMessageList,
+	generateMessage,
+	saveMessage
+};

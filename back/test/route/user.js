@@ -330,7 +330,7 @@ describe("route:user", function () {
             done();
           });
       });
-    })
+    });
   });
 
   describe("GET /user/contacts", function () {
@@ -354,6 +354,6 @@ describe("route:user", function () {
             done();
           });
       });
-    })
+    });
   });
 });
