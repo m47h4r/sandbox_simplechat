@@ -10,7 +10,6 @@ const {
   generateMessageList,
   generateMessage,
   saveMessage,
-  getChatMessages,
 } = require("../../socket/message");
 
 describe("socket:message", function () {
