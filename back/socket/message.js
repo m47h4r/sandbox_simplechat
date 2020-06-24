@@ -37,13 +37,7 @@ const getMessages = async (userId, contactId) => {
 
 const getChatMessages = async function (data, cb) {
   try {
-    const user = await getUser(data.session_id);
-    if (!user) {
-      return cb({ result: false, error: "Session not valid" });
-    }
-    const messages = await getMessages(user._id, data.contact_id);
-    const generatedMessageList = generateMessageList(messages, user._id);
-    cb({ result: true, data: generatedMessageList });
+    
   } catch(e) {
     debug(e);
     cb({ result: false });
@@ -99,7 +93,16 @@ const saveMessage = async (userId, contactId, text) => {
 
 function message(io) {
   io.on("connection", (socket) => {
-    socket.on("get-chat-messages", getChatMessages);
+    socket.on("get-chat-messages", async (data, cb) => {
+      const user = await getUser(data.session_id);
+      if (!user) {
+        return cb({ result: false, error: "Session not valid" });
+      }
+      const messages = await getMessages(user._id, data.contact_id);
+      const generatedMessageList = generateMessageList(messages, user._id);
+      cb({ result: true, data: generatedMessageList });
+    });
+
     socket.on("send-message", async (data, cb) => {
       const user = await getUser(data.session_id);
       if (!user) {
