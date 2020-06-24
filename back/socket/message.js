@@ -35,15 +35,6 @@ const getMessages = async (userId, contactId) => {
   }
 };
 
-const getChatMessages = async function (data, cb) {
-  try {
-    
-  } catch(e) {
-    debug(e);
-    cb({ result: false });
-  }
-};
-
 const generateMessageList = (messages, userId) => {
   let dataToReturn = [];
   for (let iterator in messages) {
