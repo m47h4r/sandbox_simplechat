@@ -174,4 +174,46 @@ describe("socket:message", function () {
       expect(result).to.deep.equal(responseMessage);
     });
   });
+
+  describe("function:saveMessage", function () {
+    beforeEach(function () {
+      sinon.stub(Message, "findOne");
+      sinon.stub(Message.prototype, "save");
+    });
+
+    afterEach(function () {
+      Message.findOne.restore();
+      Message.prototype.save.restore();
+    });
+
+    it("should return false if Message.prototype.save throws exception", async function () {
+      Message.prototype.save.throws({});
+      const result = await saveMessage();
+      expect(result.result).to.be.false;
+    });
+
+    it("should return false if Message.findOne throws exception", async function () {
+      Message.prototype.save.returns(new Message());
+      Message.findOne.throws({});
+      const result = await saveMessage();
+      expect(result.result).to.be.false;
+    });
+
+    it("should return true if all is well", async function () {
+      const message = new Message();
+      const mockFindOne = {
+        populate: function () {
+          return this;
+        },
+        exec: function () {
+          return message;
+        },
+      };
+      Message.prototype.save.returns(message);
+      Message.findOne.returns(mockFindOne);
+      const result = await saveMessage();
+      expect(result.result).to.be.true;
+      expect(result.message).to.equal(message);
+    });
+  });
 });
