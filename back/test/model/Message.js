@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const Message = require("../../models/Message");
+const { Message } = require("../../models/Message");
 
 describe("model:Message", function () {
 	describe("Emptiness", function () {
