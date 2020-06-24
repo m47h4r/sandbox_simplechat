@@ -238,5 +238,122 @@ describe("route:user", function () {
     });
   });
 
-  
+  describe("POST /user/signout", function () {
+    beforeEach(function () {
+      sinon.stub(User, "destroySession");
+    });
+
+    afterEach(function () {
+      User.destroySession.restore();
+    });
+
+    it("should respond with json", function (done) {
+      supertest(app)
+        .post("/user/signout")
+        .send({})
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end(function (err) {
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it("should response with false if User.destroySession throws exception", function (done) {
+      User.destroySession.throws({});
+      supertest(app)
+        .post("/user/signout")
+        .send({})
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end(function (err, response) {
+          if (err) return done(err);
+          expect(response.body.result).to.be.false;
+          expect(response.body.error).to.equal("Database error occured.");
+          done();
+        });
+    });
+
+    it("should response with false if User.destroySession returns false", function (done) {
+      User.destroySession.returns(false);
+      supertest(app)
+        .post("/user/signout")
+        .send({})
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end(function (err, response) {
+          if (err) return done(err);
+          expect(response.body.result).to.be.false;
+          expect(response.body.error).to.equal("Database error occured.");
+          done();
+        });
+    });
+
+    it("should return success if all is well", function (done) {
+      User.destroySession.returns(true);
+      supertest(app)
+        .post("/user/signout")
+        .send({})
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end(function (err, response) {
+          if (err) return done(err);
+          expect(response.body.status).to.equal("success");
+          done();
+        });
+    });
+  });
+
+  describe("POST /user/contacts/add", function () {
+    beforeEach(function () {
+      sinon.stub(User, "addContact");
+    });
+
+    afterEach(function () {
+      User.addContact.restore();
+    });
+
+    it("should respond with json", function () {
+      it("should respond with json", function (done) {
+        supertest(app)
+          .post("/user/contacts/add")
+          .send({})
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end(function (err) {
+            if (err) return done(err);
+            done();
+          });
+      });
+    })
+  });
+
+  describe("GET /user/contacts", function () {
+    beforeEach(function () {
+      sinon.stub(User, "getContacts");
+    });
+
+    afterEach(function () {
+      User.getContacts.restore();
+    });
+
+    it("should respond with json", function () {
+      it("should respond with json", function (done) {
+        supertest(app)
+          .get("/user/contacts/add")
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end(function (err) {
+            if (err) return done(err);
+            done();
+          });
+      });
+    })
+  });
 });
