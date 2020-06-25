@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+/** 
+ * Represents a message in database.
+ * @class MessageSchema
+ * @property {string} text - Text of the message
+ * @property {Schema.Types.ObjectId} from - ObjectId of the sender
+ * @property {Schema.Types.ObjectId} to - ObjectId of the receiver
+ */
 let MessageSchema = new mongoose.Schema(
 	{
 		text: {

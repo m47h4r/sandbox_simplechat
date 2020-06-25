@@ -5,7 +5,8 @@
 	"scripts": {
 		"start": "node ./bin/www",
 		"dev": "DEBUG=back:* nodemon ./bin/www",
-		"test": "mocha --recursive"
+		"test": "mocha --recursive",
+		"jsdoc": "jsdoc models/"
 	},
 	"dependencies": {
 		"bcrypt": "^4.0.1",
@@ -23,6 +24,7 @@
 	},
 	"devDependencies": {
 		"eslint": "^7.2.0",
+		"jsdoc": "^3.6.4",
 		"nodemon": "^2.0.3",
 		"nyc": "^15.1.0",
 		"supertest": "^4.0.2"
