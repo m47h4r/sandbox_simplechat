@@ -21,12 +21,12 @@ describe("route:session", function () {
 	describe("POST /session/update", function () {
 		it("should respond with json", function (done) {
 			supertest(app)
-				.post('/session/update')
-				.send({claimedSessionSecret: null})
-				.set('Accept', 'application/json')
-				.expect('Content-Type', /json/)
+				.post("/session/update")
+				.send({ claimedSessionSecret: null })
+				.set("Accept", "application/json")
+				.expect("Content-Type", /json/)
 				.expect(200)
-				.end(function(err) {
+				.end(function (err) {
 					if (err) return done(err);
 					done();
 				});

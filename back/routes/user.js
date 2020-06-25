@@ -5,10 +5,10 @@
  * @requires mongoose
  */
 
- /**
-	* Express module
-	* @const
-	*/
+/**
+ * Express module
+ * @const
+ */
 const express = require("express");
 
 /**

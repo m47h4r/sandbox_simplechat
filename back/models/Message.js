@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-/** 
+/**
  * Represents a message in database.
  * @class MessageSchema
  * @property {string} text - Text of the message
@@ -12,22 +12,22 @@ let MessageSchema = new mongoose.Schema(
 	{
 		text: {
 			type: String,
-			required: [true, "can't be blank"]
+			required: [true, "can't be blank"],
 		},
 		from: {
 			type: Schema.Types.ObjectId,
-			ref: 'User',
-			required: [true, "can't be blank"]
+			ref: "User",
+			required: [true, "can't be blank"],
 		},
 		to: {
 			type: Schema.Types.ObjectId,
-			ref: 'User',
-			required: [true, "can't be blank"]
-		}
+			ref: "User",
+			required: [true, "can't be blank"],
+		},
 	},
 	{ timestamps: true }
 );
 
 module.exports = {
-	Message: mongoose.model("Message", MessageSchema)
+	Message: mongoose.model("Message", MessageSchema),
 };

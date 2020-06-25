@@ -164,7 +164,7 @@ UserSchema.statics.destroySession = async function (sessionSecret) {
  * @async
  * @static
  * @memberof UserSchema
- * @param {string} claimedSession 
+ * @param {string} claimedSession
  * @returns {boolean} Status of verification
  */
 UserSchema.statics.checkSession = async function (claimedSession) {
@@ -194,7 +194,7 @@ UserSchema.statics.checkSession = async function (claimedSession) {
  * @async
  * @static
  * @memberof UserSchema
- * @param {string} claimedSession 
+ * @param {string} claimedSession
  * @returns {boolean} Status of the action performed
  */
 UserSchema.statics.updateSession = async function (claimedSession) {
