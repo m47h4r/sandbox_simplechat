@@ -6,7 +6,7 @@
 		"start": "node ./bin/www",
 		"dev": "DEBUG=back:* nodemon ./bin/www",
 		"test": "mocha --recursive",
-		"jsdoc": "jsdoc models/"
+		"jsdoc": "jsdoc models/ routes/"
 	},
 	"dependencies": {
 		"bcrypt": "^4.0.1",
