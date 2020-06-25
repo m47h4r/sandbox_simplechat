@@ -2,6 +2,7 @@
  * Express router providing session end points
  * @module routers/session
  * @requires express
+ * @requires mongoose
  */
 
 /**
@@ -32,7 +33,7 @@ const User = mongoose.model("User");
  * @memberof module:routers/session~sessionRouter
  * @inner
  * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
+ * @param {callback} middleware - Express middleware
  * @returns {json} - Status of session being valid or not
  */
 router.get("/check", async (request, response) => {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Global</title>
+    <title>JSDoc: Namespace: userRouter</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Global</h1>
+    <h1 class="page-title">Namespace: userRouter</h1>
 
     
 
@@ -28,7 +28,8 @@
 
 <header>
     
-        <h2></h2>
+        <h2>
+            <span class="ancestors"><a href="module-routers_user.html">routers/user</a>~</span>userRouter</h2>
         
     
 </header>
@@ -36,6 +37,8 @@
 <article>
     <div class="container-overview">
     
+        
+            <div class="description">Express router to mount the session related functions on</div>
         
 
         
@@ -67,6 +70,11 @@
 
     
 
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line14">line 14</a>
+    </li></ul></dd>
     
 
     
@@ -104,7 +112,7 @@
     
 
     
-    <h4 class="name" id="checkPlainTextOverHash"><span class="type-signature">(async) </span>checkPlainTextOverHash<span class="signature">(plainText, hash)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="~post/user/contacts"><span class="type-signature">(inner) </span>post/user/contacts<span class="signature">(path, middleware)</span><span class="type-signature"> &rarr; {json}</span></h4>
     
 
     
@@ -112,7 +120,7 @@
 
 
 <div class="description">
-    Checks the user input password in plain text over the hash.
+    Route to get contacts of a user
 </div>
 
 
@@ -148,7 +156,7 @@
 
         <tr>
             
-                <td class="name"><code>plainText</code></td>
+                <td class="name"><code>path</code></td>
             
 
             <td class="type">
@@ -164,20 +172,20 @@
 
             
 
-            <td class="description last">User's password in plain text</td>
+            <td class="description last">Express path</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>hash</code></td>
+                <td class="name"><code>middleware</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">callback</span>
 
 
             
@@ -187,7 +195,7 @@
 
             
 
-            <td class="description last">User's password hash</td>
+            <td class="description last">Express middleware</td>
         </tr>
 
     
@@ -228,7 +236,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_User.js.html">models/User.js</a>, <a href="models_User.js.html#line74">line 74</a>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -257,7 +265,7 @@
 
         
 <div class="param-desc">
-    Does match or not.
+    - Status of contacts being retreived
 </div>
 
 
@@ -268,7 +276,7 @@
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">json</span>
 
 
     </dd>
@@ -286,7 +294,7 @@
     
 
     
-    <h4 class="name" id="generateHashedPassword"><span class="type-signature">(async) </span>generateHashedPassword<span class="signature">(plainTextPassword)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="~post/user/contacts/add"><span class="type-signature">(inner) </span>post/user/contacts/add<span class="signature">(path, middleware)</span><span class="type-signature"> &rarr; {json}</span></h4>
     
 
     
@@ -294,7 +302,7 @@
 
 
 <div class="description">
-    Uses bcrypt library to generate a hash based on user input.
+    Route to add a contact to a user
 </div>
 
 
@@ -330,7 +338,7 @@
 
         <tr>
             
-                <td class="name"><code>plainTextPassword</code></td>
+                <td class="name"><code>path</code></td>
             
 
             <td class="type">
@@ -346,7 +354,30 @@
 
             
 
-            <td class="description last">User entered plain text password</td>
+            <td class="description last">Express path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>middleware</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express middleware</td>
         </tr>
 
     
@@ -387,7 +418,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_User.js.html">models/User.js</a>, <a href="models_User.js.html#line57">line 57</a>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -416,7 +447,7 @@
 
         
 <div class="param-desc">
-    HashedPassword
+    - Status of contact being added
 </div>
 
 
@@ -427,7 +458,553 @@
     </dt>
     <dd>
         
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~post/user/signin"><span class="type-signature">(inner) </span>post/user/signin<span class="signature">(path, middleware)</span><span class="type-signature"> &rarr; {json}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Route to signin a provided user
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>middleware</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express middleware</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Status of user being signed in
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~post/user/signout"><span class="type-signature">(inner) </span>post/user/signout<span class="signature">(path, middleware)</span><span class="type-signature"> &rarr; {json}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Route to signout a provided user
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>middleware</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express middleware</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Status of user being signed out
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~post/user/signup"><span class="type-signature">(inner) </span>post/user/signup<span class="signature">(path, middleware)</span><span class="type-signature"> &rarr; {json}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Route to signup a provided user
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>middleware</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express middleware</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="routes_user.js.html">routes/user.js</a>, <a href="routes_user.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Status of user being created
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
 
 
     </dd>
@@ -442,518 +1019,6 @@
         
     
 
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        
-                
-<h4 class="name" id="addConntactResult">addConntactResult</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>result.status</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Indicating success/failure status</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result.error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">if failed, returns an error</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_User.js.html">models/User.js</a>, <a href="models_User.js.html#line220">line 220</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-            
-                
-<h4 class="name" id="createSessionResult">createSessionResult</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>result.status</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Indicating success/failure status</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result.sessionSecret</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">if successful, returns a session id</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_User.js.html">models/User.js</a>, <a href="models_User.js.html#line109">line 109</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-            
-                
-<h4 class="name" id="getContactsResult">getContactsResult</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>result.result</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Indicating success/failure status</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result.error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">if failed, returns an error</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result.contactList</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">arrary</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">if successful, returns the contact list</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_User.js.html">models/User.js</a>, <a href="models_User.js.html#line259">line 259</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-            
     
 
     
